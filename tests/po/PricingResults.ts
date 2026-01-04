@@ -1,0 +1,35 @@
+import type { Page } from 'playwright';
+import type { PricingResult, PricingStatus } from '../domain/models';
+
+export class PricingResults {
+  public constructor(private readonly page: Page) {}
+
+  public async read(): Promise<PricingResult> {
+    const statusText =
+      (await this.page.locator('[data-testid="pricing-status"]').textContent()) ?? '';
+    const status = this.parseStatus(statusText.trim());
+
+    const pvText = ((await this.page.locator('[data-testid="pricing-pv"]').textContent()) ?? '')
+      .trim();
+    const errorText = (
+      (await this.page.locator('[data-testid="pricing-error"]').textContent()) ?? ''
+    ).trim();
+
+    const pv = pvText.length > 0 ? Number(pvText) : undefined;
+    const error = errorText.length > 0 ? errorText : undefined;
+
+    return { status, pv: Number.isFinite(pv ?? NaN) ? pv : undefined, error };
+  }
+
+  private parseStatus(value: string): PricingStatus {
+    switch (value) {
+      case 'IDLE':
+      case 'PRICING':
+      case 'PRICED':
+      case 'FAILED':
+        return value;
+      default:
+        throw new Error(`Unexpected status: "${value}"`);
+    }
+  }
+}
