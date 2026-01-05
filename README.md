@@ -65,6 +65,36 @@ const result = await app.price();
 
 No selectors. No UI widget vocabulary.
 
+## Testing Approaches
+
+This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `TradeTicketApp` interface.
+
+### Page Object Driver
+
+- **What:** A driver implements `TradeTicketApp` using Playwright and Page Objects.
+- **How:** Tests call `app` methods; the driver coordinates selectors, waits, and request interception.
+- **Pros:** Simple mental model; direct mapping from intent to driver actions.
+- **Example:** [Chromium spec](tests/business/price-two-option-legs.chromium.spec.ts) and [Mock spec](tests/business/price-two-option-legs.mock.spec.ts).
+
+### Screenplay Pattern
+
+- **What:** An `Actor` performs `Tasks` and answers `Questions` using the same `TradeTicketApp`.
+- **How:** Compose tasks like `StartNewTicket`, `AddOptionLeg`, `Price`; query results via `PricingStatus`, `PricingPV`.
+- **Pros:** Encourages reusability and a richer vocabulary of intent; easy to extend with abilities and memory.
+- **Example:** [Chromium screenplay spec](tests/business/price-two-option-legs.chromium.screenplay.spec.ts) and [Mock screenplay spec](tests/business/price-two-option-legs.mock.screenplay.spec.ts).
+
+### Comparison
+
+- Both styles isolate UI details via `TradeTicketApp` and keep tests at the business level.
+- Page Object Driver suits small to medium suites; Screenplay scales better when you want reusable, composable tasks.
+- You can mix both approaches in one repo; choose based on team preference and test complexity.
+
+### Additional Examples
+
+- Error path: pricing with no legs returns `FAILED` in both styles.
+  - Page Object: [Chromium no-legs](tests/business/price-no-legs.chromium.spec.ts), [Mock no-legs](tests/business/price-no-legs.mock.spec.ts).
+  - Screenplay: [Chromium no-legs](tests/business/price-no-legs.chromium.screenplay.spec.ts), [Mock no-legs](tests/business/price-no-legs.mock.screenplay.spec.ts).
+
 ## Running locally
 
 ### Prerequisites
