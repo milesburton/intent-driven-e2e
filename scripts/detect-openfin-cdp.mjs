@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Detect OpenFin DevTools websocket URL and print it to stdout.
-// Tries common endpoints and hosts; exits 0 with URL on success, 2 on not found, 1 on unexpected error.
+// Order: honor OPENFIN_CDP_URL if provided, else probe common hosts/endpoints.
+// Exits 0 with URL on success, 2 on not found, 1 on unexpected error.
 
 import http from 'node:http';
 
@@ -30,12 +31,29 @@ function getJson(url, timeoutMs = 400) {
 }
 
 async function detect() {
+  // If user already provided a ws URL, trust and return it
+  const provided = process.env.OPENFIN_CDP_URL;
+  if (provided && (provided.startsWith('ws://') || provided.startsWith('wss://'))) {
+    return provided;
+  }
+
   const isLinux = process.platform === 'linux';
-  const hosts = [process.env.OPENFIN_HOST || (isLinux ? 'host.docker.internal' : '127.0.0.1')];
+  const hosts = [
+    process.env.OPENFIN_HOST || (isLinux ? 'host.docker.internal' : '127.0.0.1'),
+    '127.0.0.1'
+  ];
   const port = process.env.OPENFIN_PORT || '9222';
-  const url = `http://${hosts[0]}:${port}/json/version`;
-  const res = await getJson(url);
-  if (res.ok && res.data?.webSocketDebuggerUrl) return res.data.webSocketDebuggerUrl;
+  const endpoints = ['json/version', 'json'];
+  for (const host of hosts) {
+    for (const ep of endpoints) {
+      const url = `http://${host}:${port}/${ep}`;
+      const res = await getJson(url);
+      if (!res.ok) continue;
+      const body = res.data;
+      if (ep === 'json/version' && body?.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
+      if (ep === 'json' && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) return body[0].webSocketDebuggerUrl;
+    }
+  }
   return null;
 }
 

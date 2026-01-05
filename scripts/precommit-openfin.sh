@@ -7,7 +7,13 @@ if [[ "${OPENFIN_PRECOMMIT:-1}" == "0" ]]; then
 fi
 
 echo "[pre-commit][openfin] checking availability..."
-WS_URL=$(node scripts/detect-openfin-cdp.mjs || true)
+
+# If OPENFIN_CDP_URL is preset and a ws:// URL, prefer it
+if [[ -n "${OPENFIN_CDP_URL:-}" && ( "$OPENFIN_CDP_URL" == ws://* || "$OPENFIN_CDP_URL" == wss://* ) ]]; then
+  WS_URL="$OPENFIN_CDP_URL"
+else
+  WS_URL=$(node scripts/detect-openfin-cdp.mjs || true)
+fi
 if [[ -z "${WS_URL:-}" ]];
 then
   echo "[pre-commit][openfin] not available, skipping OpenFin tests"
