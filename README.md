@@ -89,46 +89,6 @@ This repo demonstrates two complementary styles that both preserve business inte
 - Page Object Driver suits small to medium suites; Screenplay scales better when you want reusable, composable tasks.
 - You can mix both approaches in one repo; choose based on team preference and test complexity.
 
-### Additional Examples
-
-- Error path: pricing with no legs returns `FAILED` in both styles.
-  - Page Object: [Chromium no-legs](tests/business/price-no-legs.chromium.spec.ts), [Mock no-legs](tests/business/price-no-legs.mock.spec.ts).
-  - Screenplay: [Chromium no-legs](tests/business/price-no-legs.chromium.screenplay.spec.ts), [Mock no-legs](tests/business/price-no-legs.mock.screenplay.spec.ts).
-
-## Running locally
-
-### Prerequisites
-
-- Node.js 20+
-- pnpm 9+
-- Playwright browsers installed:
-  - `pnpm exec playwright install --with-deps chromium`
-
-### Commands
-
-Install:
-
-```bash
-pnpm install
-pnpm exec playwright install --with-deps chromium
-```
-
-Run tests:
-
-```bash
-pnpm test
-```
-
-Run the app manually:
-
-```bash
-pnpm dev
-```
-
-## Dev Container
-
-This project is designed to run inside a Dev Container.
-
 ### Headed vs headless execution
 
 - Headless mode works inside the Dev Container by default.
@@ -139,7 +99,3 @@ This project is designed to run inside a Dev Container.
 If you need headed mode, run Playwright on the host machine.
 
 The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
-
-## CI (GitHub Actions)
-
-The workflow installs dependencies, installs Chromium for Playwright, and runs Vitest.
