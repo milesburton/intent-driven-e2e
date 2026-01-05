@@ -4,6 +4,9 @@ app/dist
 .vite
 .vitest
 
+coverage
+.pnpm-store
+
 test-results
 playwright-report
 
