@@ -3,10 +3,10 @@
     "version": "stable",
     "arguments": "--remote-debugging-port=9222"
   },
-  "startupApp": {
+  "startup_app": {
     "name": "DomainDrivenUITesting",
     "uuid": "domain-driven-ui-testing-app",
-    "url": "http://localhost:6000",
+    "url": "http://127.0.0.1:6000",
     "autoShow": true
   }
 }
