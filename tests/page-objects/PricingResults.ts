@@ -9,8 +9,9 @@ export class PricingResults {
       (await this.page.locator('[data-testid="pricing-status"]').textContent()) ?? '';
     const status = this.parseStatus(statusText.trim());
 
-    const pvText = ((await this.page.locator('[data-testid="pricing-pv"]').textContent()) ?? '')
-      .trim();
+    const pvText = (
+      (await this.page.locator('[data-testid="pricing-pv"]').textContent()) ?? ''
+    ).trim();
     const errorText = (
       (await this.page.locator('[data-testid="pricing-error"]').textContent()) ?? ''
     ).trim();

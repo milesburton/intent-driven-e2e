@@ -1,7 +1,7 @@
 import type { Page, Route, Request } from 'playwright';
 import type { TradeTicketApp } from '../domain/trade-ticket-app.interface';
 import type { OptionLeg, PricingResult } from '../domain/models';
-import { TradeTicketPage } from '../po/trade-ticket-page';
+import { TradeTicketPage } from '../page-objects/trade-ticket-page';
 
 export interface PricingInterceptor {
   expectedUrl: string;
