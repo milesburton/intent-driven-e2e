@@ -32,4 +32,4 @@ else
 fi
 
 # Run only the OpenFin specs to keep hook fast
-pnpm -s vitest run --dir tests tests/openfin/business/*.openfin.spec.ts
+pnpm -s vitest run --dir tests tests/openfin/business/*.spec.ts
