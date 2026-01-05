@@ -1,4 +1,5 @@
 import type { ComputeResult } from '../types';
+import { ERRORS, STATUS } from '../types';
 
 type JsonObject = Record<string, unknown>;
 
@@ -12,24 +13,24 @@ function isString(value: unknown): value is string {
 
 export function parseComputeResult(payload: unknown): ComputeResult {
   if (typeof payload !== 'object' || payload === null) {
-    return { status: 'FAILED', error: 'Invalid response' };
+    return { status: STATUS.FAILED, error: ERRORS.INVALID_RESPONSE };
   }
   const obj = payload as JsonObject;
 
   const status = obj['status'];
-  if (status !== 'PRICED' && status !== 'FAILED') {
-    return { status: 'FAILED', error: 'Invalid response status' };
+  if (status !== STATUS.PRICED && status !== STATUS.FAILED) {
+    return { status: STATUS.FAILED, error: ERRORS.INVALID_STATUS };
   }
 
-  if (status === 'FAILED') {
+  if (status === STATUS.FAILED) {
     const error = obj['error'];
-    return { status: 'FAILED', error: isString(error) ? error : 'Unknown error' };
+    return { status: STATUS.FAILED, error: isString(error) ? error : ERRORS.UNKNOWN };
   }
 
   const pv = obj['pv'];
   if (!isFiniteNumber(pv)) {
-    return { status: 'FAILED', error: 'Missing pv' };
+    return { status: STATUS.FAILED, error: ERRORS.MISSING_PV };
   }
 
-  return { status: 'PRICED', pv };
+  return { status: STATUS.PRICED, pv };
 }

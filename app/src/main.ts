@@ -1,5 +1,6 @@
 import './styles.css';
 import type { RequestItem, ComputeResult, Direction, Kind } from './types';
+import { ERRORS, STATUS } from './types';
 import { parseComputeResult } from './utils/compute';
 
 declare const __BUILD_HASH__: string;
@@ -21,7 +22,7 @@ function el<K extends keyof HTMLElementTagNameMap>(
 function createApp(root: HTMLElement): void {
   const state: { items: RequestItem[]; result: ComputeResult } = {
     items: [],
-    result: { status: 'IDLE' }
+    result: { status: STATUS.IDLE }
   };
 
   const container = el('div', { class: 'container', 'data-testid': 'request-form' });
@@ -178,12 +179,12 @@ function createApp(root: HTMLElement): void {
 
   async function price(): Promise<void> {
     if (state.items.length === 0) {
-      state.result = { status: 'FAILED', error: 'No items' };
+      state.result = { status: STATUS.FAILED, error: ERRORS.NO_ITEMS };
       renderResults();
       return;
     }
 
-    state.result = { status: 'PRICING' };
+    state.result = { status: STATUS.PRICING };
     renderResults();
 
     try {
@@ -198,8 +199,8 @@ function createApp(root: HTMLElement): void {
       renderResults();
     } catch (e: unknown) {
       state.result = {
-        status: 'FAILED',
-        error: e instanceof Error ? e.message : 'Unknown error'
+        status: STATUS.FAILED,
+        error: e instanceof Error ? e.message : ERRORS.UNKNOWN
       };
       renderResults();
     }

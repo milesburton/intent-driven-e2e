@@ -22,3 +22,12 @@ export const STATUS = {
   PRICED: 'PRICED' as const,
   FAILED: 'FAILED' as const
 };
+
+// Shared error message constants for use across app and tests
+export const ERRORS = {
+  NO_ITEMS: 'No items' as const,
+  INVALID_RESPONSE: 'Invalid response' as const,
+  INVALID_STATUS: 'Invalid response status' as const,
+  UNKNOWN: 'Unknown error' as const,
+  MISSING_PV: 'Missing pv' as const
+};

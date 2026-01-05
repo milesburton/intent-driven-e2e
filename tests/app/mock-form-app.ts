@@ -1,5 +1,6 @@
 import type { RequestFormApp } from '../domain/request-form-app.interface';
 import type { RequestItem, ComputeResult } from '../domain/models';
+import { ERRORS, STATUS } from '../../app/src/types';
 
 function validateItem(item: RequestItem): string | null {
   if (item.strike <= 0) return 'Invalid strike';
@@ -23,7 +24,7 @@ export class MockFormApp implements RequestFormApp {
 
   public async compute(): Promise<ComputeResult> {
     if (this.items.length === 0) {
-      return { status: 'FAILED', error: 'No items' };
+      return { status: STATUS.FAILED, error: ERRORS.NO_ITEMS };
     }
 
     const pv = this.items.reduce((acc, item) => {
@@ -32,6 +33,6 @@ export class MockFormApp implements RequestFormApp {
       return acc + sideSign * item.quantity * item.strike * typeScale;
     }, 0);
 
-    return { status: 'PRICED', pv: Number(pv.toFixed(2)) };
+    return { status: STATUS.PRICED, pv: Number(pv.toFixed(2)) };
   }
 }
