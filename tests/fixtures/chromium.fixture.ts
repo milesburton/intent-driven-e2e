@@ -17,7 +17,10 @@ export function createChromiumFixture(interceptor: PricingInterceptor): Chromium
 
   beforeAll(async () => {
     server = await startViteAppServer();
-    browser = await chromium.launch({ headless: true });
+    browser = await chromium.launch({
+      headless: true,
+      args: ['--disable-gpu', '--disable-dev-shm-usage']
+    });
     page = await browser.newPage();
 
     app = new ChromiumFormApp(page, server.baseUrl, interceptor);
