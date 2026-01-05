@@ -5,9 +5,9 @@ export class LineItemEditor {
   public constructor(private readonly page: Page) {}
 
   public async addItem(): Promise<number> {
-    const before = await this.page.locator('[data-testid="legs-body"] tr').count();
-    await this.page.locator('[data-testid="add-leg"]').click();
-    const after = await this.page.locator('[data-testid="legs-body"] tr').count();
+    const before = await this.page.locator('[data-testid="items-body"] tr').count();
+    await this.page.locator('[data-testid="add-item"]').click();
+    const after = await this.page.locator('[data-testid="items-body"] tr').count();
     if (after !== before + 1) {
       throw new Error(`Expected item count to increment. Before=${before} After=${after}`);
     }
@@ -15,10 +15,10 @@ export class LineItemEditor {
   }
 
   public async fillItem(index: number, item: RequestItem): Promise<void> {
-    await this.page.locator(`[data-testid="leg-side-${index}"]`).selectOption(item.side);
-    await this.page.locator(`[data-testid="leg-type-${index}"]`).selectOption(item.type);
-    await this.page.locator(`[data-testid="leg-strike-${index}"]`).fill(String(item.strike));
-    await this.page.locator(`[data-testid="leg-expiry-${index}"]`).fill(item.expiry);
-    await this.page.locator(`[data-testid="leg-qty-${index}"]`).fill(String(item.quantity));
+    await this.page.locator(`[data-testid="item-side-${index}"]`).selectOption(item.side);
+    await this.page.locator(`[data-testid="item-type-${index}"]`).selectOption(item.type);
+    await this.page.locator(`[data-testid="item-strike-${index}"]`).fill(String(item.strike));
+    await this.page.locator(`[data-testid="item-expiry-${index}"]`).fill(item.expiry);
+    await this.page.locator(`[data-testid="item-qty-${index}"]`).fill(String(item.quantity));
   }
 }

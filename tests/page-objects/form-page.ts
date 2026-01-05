@@ -13,14 +13,14 @@ export class FormPage {
 
   public async goto(baseUrl: string): Promise<void> {
     await this.page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
-    await this.page.locator('[data-testid="trade-ticket"]').waitFor();
+    await this.page.locator('[data-testid="request-form"]').waitFor();
   }
 
   public async startNewRequest(): Promise<void> {
-    await this.page.locator('[data-testid="new-ticket"]').click();
+    await this.page.locator('[data-testid="new-request"]').click();
   }
 
   public async clickCompute(): Promise<void> {
-    await this.page.locator('[data-testid="price"]').click();
+    await this.page.locator('[data-testid="compute"]').click();
   }
 }

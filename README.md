@@ -47,45 +47,31 @@ The compute endpoint is intentionally fake. Tests intercept the POST request and
 Tests depend on the domain interface:
 
 ```ts
-export interface RequestFormApp {
-  startNewRequest(): Promise<void>;
-  addItem(item: RequestItem): Promise<void>;
-  compute(): Promise<ComputeResult>;
-}
+export interface RequestFormApp
 ```
 
 A test reads like intent:
-
-```ts
-await app.startNewRequest();
-await app.addItem(itemA);
 await app.addItem(itemB);
 const result = await app.compute();
+
 ```
-
-No selectors. No UI widget vocabulary.
-
-## Testing Approaches
-
-This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `RequestFormApp` interface.
 
 ### Page Object Driver
 
-- **What:** A driver implements `RequestFormApp` using Playwright and Page Objects.
-- **How:** Tests call `app` methods; the driver coordinates selectors, waits, and request interception.
 - **Pros:** Simple mental model; direct mapping from intent to driver actions.
 - **Example:** [Chromium spec](tests/business/price-two-option-legs.chromium.spec.ts) and [Mock spec](tests/business/price-two-option-legs.mock.spec.ts).
 
 ### Screenplay Pattern
 
 - **What:** An `Actor` performs `Tasks` and answers `Questions` using the same `RequestFormApp`.
+This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `RequestFormApp` interface.
 - **How:** Compose tasks like `StartNewRequest`, `AddItem`, `Compute`; query results via `ResultStatus`, `ResultValue`.
 - **Pros:** Encourages reusability and a richer vocabulary of intent; easy to extend with abilities and memory.
 - **Example:** [Chromium screenplay spec](tests/business/price-two-option-legs.chromium.screenplay.spec.ts) and [Mock screenplay spec](tests/business/price-two-option-legs.mock.screenplay.spec.ts).
 
 ### Comparison
 
-- Both styles isolate UI details via `TradeTicketApp` and keep tests at the business level.
+- Both styles isolate UI details via `RequestFormApp` and keep tests at the business level.
 - Page Object Driver suits small to medium suites; Screenplay scales better when you want reusable, composable tasks.
 - You can mix both approaches in one repo; choose based on team preference and test complexity.
 
@@ -99,3 +85,4 @@ This repo demonstrates two complementary styles that both preserve business inte
 If you need headed mode, run Playwright on the host machine.
 
 The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
+```

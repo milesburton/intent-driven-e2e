@@ -6,14 +6,14 @@ export class ComputeResults {
 
   public async read(): Promise<ComputeResult> {
     const statusText =
-      (await this.page.locator('[data-testid="pricing-status"]').textContent()) ?? '';
+      (await this.page.locator('[data-testid="result-status"]').textContent()) ?? '';
     const status = this.parseStatus(statusText.trim());
 
     const pvText = (
-      (await this.page.locator('[data-testid="pricing-pv"]').textContent()) ?? ''
+      (await this.page.locator('[data-testid="result-value"]').textContent()) ?? ''
     ).trim();
     const errorText = (
-      (await this.page.locator('[data-testid="pricing-error"]').textContent()) ?? ''
+      (await this.page.locator('[data-testid="result-error"]').textContent()) ?? ''
     ).trim();
 
     const pv = pvText.length > 0 ? Number(pvText) : undefined;

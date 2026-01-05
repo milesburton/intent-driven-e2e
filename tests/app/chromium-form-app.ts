@@ -46,7 +46,7 @@ export class ChromiumFormApp implements RequestFormApp {
     await this.form.clickCompute();
 
     await this.page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="pricing-status"]');
+      const el = document.querySelector('[data-testid="result-status"]');
       const t = el?.textContent?.trim();
       return t === 'PRICED' || t === 'FAILED';
     });

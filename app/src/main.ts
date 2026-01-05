@@ -21,24 +21,24 @@ function createApp(root: HTMLElement): void {
     result: { status: 'IDLE' }
   };
 
-  const container = el('div', { class: 'container', 'data-testid': 'trade-ticket' });
+  const container = el('div', { class: 'container', 'data-testid': 'request-form' });
   const title = el('h1');
   title.textContent = 'Request Form';
 
   const toolbar = el('div', { class: 'toolbar' });
 
-  const newTicketBtn = el('button', { type: 'button', 'data-testid': 'new-ticket' });
+  const newTicketBtn = el('button', { type: 'button', 'data-testid': 'new-request' });
   newTicketBtn.textContent = 'New request';
 
-  const addLegBtn = el('button', { type: 'button', 'data-testid': 'add-leg' });
+  const addLegBtn = el('button', { type: 'button', 'data-testid': 'add-item' });
   addLegBtn.textContent = 'Add item';
 
-  const priceBtn = el('button', { type: 'button', 'data-testid': 'price' });
+  const priceBtn = el('button', { type: 'button', 'data-testid': 'compute' });
   priceBtn.textContent = 'Compute';
 
   toolbar.append(newTicketBtn, addLegBtn, priceBtn);
 
-  const table = el('table', { 'data-testid': 'legs-table' });
+  const table = el('table', { 'data-testid': 'items-table' });
   const thead = el('thead');
   const headRow = el('tr');
   for (const h of ['Side', 'Type', 'Strike', 'Expiry', 'Quantity', 'Remove']) {
@@ -48,25 +48,25 @@ function createApp(root: HTMLElement): void {
   }
   thead.append(headRow);
 
-  const tbody = el('tbody', { 'data-testid': 'legs-body' });
+  const tbody = el('tbody', { 'data-testid': 'items-body' });
   table.append(thead, tbody);
 
-  const resultsPanel = el('div', { class: 'panel', 'data-testid': 'pricing-results' });
+  const resultsPanel = el('div', { class: 'panel', 'data-testid': 'compute-results' });
   const resultsTitle = el('div');
   resultsTitle.textContent = 'Results';
   const kv = el('div', { class: 'kv' });
 
   const kStatus = el('div');
   kStatus.textContent = 'Status';
-  const vStatus = el('div', { 'data-testid': 'pricing-status' });
+  const vStatus = el('div', { 'data-testid': 'result-status' });
 
   const kPv = el('div');
   kPv.textContent = 'Value';
-  const vPv = el('div', { 'data-testid': 'pricing-pv' });
+  const vPv = el('div', { 'data-testid': 'result-value' });
 
   const kError = el('div');
   kError.textContent = 'Error';
-  const vError = el('div', { 'data-testid': 'pricing-error' });
+  const vError = el('div', { 'data-testid': 'result-error' });
 
   kv.append(kStatus, vStatus, kPv, vPv, kError, vError);
   resultsPanel.append(resultsTitle, kv);
@@ -81,9 +81,9 @@ function createApp(root: HTMLElement): void {
     tbody.textContent = '';
 
     state.items.forEach((item, idx) => {
-      const row = el('tr', { 'data-testid': `leg-row-${idx}` });
+      const row = el('tr', { 'data-testid': `item-row-${idx}` });
 
-      const sideSel = el('select', { 'data-testid': `leg-side-${idx}` });
+      const sideSel = el('select', { 'data-testid': `item-side-${idx}` });
       const sideBuy = el('option');
       sideBuy.value = 'BUY';
       sideBuy.textContent = 'BUY';
@@ -100,7 +100,7 @@ function createApp(root: HTMLElement): void {
         }
       });
 
-      const typeSel = el('select', { 'data-testid': `leg-type-${idx}` });
+      const typeSel = el('select', { 'data-testid': `item-type-${idx}` });
       const callOpt = el('option');
       callOpt.value = 'CALL';
       callOpt.textContent = 'CALL';
@@ -117,7 +117,7 @@ function createApp(root: HTMLElement): void {
         }
       });
 
-      const strikeInput = el('input', { type: 'number', 'data-testid': `leg-strike-${idx}` });
+      const strikeInput = el('input', { type: 'number', 'data-testid': `item-strike-${idx}` });
       strikeInput.value = String(item.strike);
       strikeInput.addEventListener('input', () => {
         const n = Number(strikeInput.value);
@@ -126,13 +126,13 @@ function createApp(root: HTMLElement): void {
         }
       });
 
-      const expiryInput = el('input', { type: 'date', 'data-testid': `leg-expiry-${idx}` });
+      const expiryInput = el('input', { type: 'date', 'data-testid': `item-expiry-${idx}` });
       expiryInput.value = item.expiry;
       expiryInput.addEventListener('input', () => {
         item.expiry = expiryInput.value;
       });
 
-      const qtyInput = el('input', { type: 'number', 'data-testid': `leg-qty-${idx}` });
+      const qtyInput = el('input', { type: 'number', 'data-testid': `item-qty-${idx}` });
       qtyInput.value = String(item.quantity);
       qtyInput.addEventListener('input', () => {
         const n = Number(qtyInput.value);
@@ -141,7 +141,7 @@ function createApp(root: HTMLElement): void {
         }
       });
 
-      const removeBtn = el('button', { type: 'button', 'data-testid': `leg-remove-${idx}` });
+      const removeBtn = el('button', { type: 'button', 'data-testid': `item-remove-${idx}` });
       removeBtn.textContent = 'Remove';
       removeBtn.addEventListener('click', () => {
         state.items.splice(idx, 1);
