@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/ci.yml)
 [![Coverage Status](https://codecov.io/gh/milesburton/domain-driven-ui-testing/branch/main/graph/badge.svg)](https://codecov.io/gh/milesburton/domain-driven-ui-testing)
+[![OpenFin (manual)](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/openfin.yml/badge.svg?branch=main)](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/openfin.yml)
 ![Node](https://img.shields.io/badge/node-22.x-43853d?logo=node.js&logoColor=white)
 ![pnpm](https://img.shields.io/badge/pnpm-9.x-f69220?logo=pnpm&logoColor=white)
 ![ESLint](https://img.shields.io/badge/eslint-enabled-4B32C3?logo=eslint&logoColor=white)
@@ -122,6 +123,37 @@ Notes:
 
 - OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
 - A dedicated Windows workflow can be added to run these tests on `windows-latest`.
+
+### Running OpenFin from the dev container (Windows host)
+
+If you develop inside a Linux dev container on a Windows host (WSL/Docker Desktop), run OpenFin on the host and drive it from the container over CDP:
+
+1. In the dev container, serve the app (it binds to `0.0.0.0:6000`):
+
+   ```bash
+   pnpm preview
+   ```
+
+2. On the Windows host, launch OpenFin pointing at the manifest:
+
+   ```powershell
+   npx openfin-cli@latest --launch --manifest-file openfin.app.json
+   ```
+
+3. Back in the dev container, run the OpenFin specs. On Linux the adapter defaults CDP to `http://host.docker.internal:9222`, so you typically only need:
+
+   ```bash
+   export OPENFIN=1
+   pnpm vitest run tests/business/*.openfin.spec.ts
+   ```
+
+   If needed, override explicitly:
+
+   ```bash
+   export OPENFIN=1
+   export OPENFIN_CDP_URL=http://<windows-host-ip>:9222
+   pnpm vitest run tests/business/*.openfin.spec.ts
+   ```
 
 ```
 
