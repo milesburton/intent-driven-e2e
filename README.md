@@ -34,11 +34,11 @@ Only the driver layer knows Playwright exists.
 
 A minimal but realistic request form UI is included under `app/` (Vite + TypeScript). It models:
 
-- Creating a new ticket
-- Adding option legs (BUY/SELL, CALL/PUT, strike, expiry, quantity)
-- Pricing the ticket via an external POST request to `http://pricing.acmibank/price`
+- Starting a new request
+- Adding items (side, type, strike, expiry, quantity)
+- Computing a result via an external POST request to `http://service.local/compute`
 
-The pricing endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
+Why the network interception exists: the UI depends on an external compute service to produce results. In tests, we intercept that POST call and return a controlled payload. This keeps tests deterministic, fast, and isolated from real backends while still exercising the full user flow (clicks, waits, rendering).
 
 ## Test example
 
@@ -46,19 +46,19 @@ Tests depend on the domain interface:
 
 ```ts
 export interface RequestFormApp {
-  startNewTicket(): Promise<void>;
-  addOptionLeg(leg: OptionLeg): Promise<void>;
-  price(): Promise<PricingResult>;
+  startNewRequest(): Promise<void>;
+  addItem(item: RequestItem): Promise<void>;
+  compute(): Promise<ComputeResult>;
 }
 ```
 
 A test reads like intent:
 
 ```ts
-await app.startNewTicket();
-await app.addOptionLeg(buyCall);
-await app.addOptionLeg(sellCall);
-const result = await app.price();
+await app.startNewRequest();
+await app.addItem(itemA);
+await app.addItem(itemB);
+const result = await app.compute();
 ```
 
 No selectors. No UI widget vocabulary.
