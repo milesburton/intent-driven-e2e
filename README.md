@@ -125,13 +125,13 @@ pnpm test
 
 OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
 
-### Running the end-to-end tests using OpenFin 
+### Running the end-to-end tests using OpenFin
 
 **Step 1.** In the dev container, serve the app and manifest:
 
 ```bash
-pnpm preview          
-pnpm manifest:serve 
+pnpm preview
+pnpm manifest:serve
 ```
 
 **Step 2.** Download and run the script directly from the dev container (manifest server on 6002):
