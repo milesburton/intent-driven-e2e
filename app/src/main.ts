@@ -23,18 +23,18 @@ function createApp(root: HTMLElement): void {
 
   const container = el('div', { class: 'container', 'data-testid': 'trade-ticket' });
   const title = el('h1');
-  title.textContent = 'Trade Ticket (Options)';
+  title.textContent = 'Request Form';
 
   const toolbar = el('div', { class: 'toolbar' });
 
   const newTicketBtn = el('button', { type: 'button', 'data-testid': 'new-ticket' });
-  newTicketBtn.textContent = 'New ticket';
+  newTicketBtn.textContent = 'New request';
 
   const addLegBtn = el('button', { type: 'button', 'data-testid': 'add-leg' });
-  addLegBtn.textContent = 'Add option leg';
+  addLegBtn.textContent = 'Add item';
 
   const priceBtn = el('button', { type: 'button', 'data-testid': 'price' });
-  priceBtn.textContent = 'Price';
+  priceBtn.textContent = 'Compute';
 
   toolbar.append(newTicketBtn, addLegBtn, priceBtn);
 
@@ -53,7 +53,7 @@ function createApp(root: HTMLElement): void {
 
   const resultsPanel = el('div', { class: 'panel', 'data-testid': 'pricing-results' });
   const resultsTitle = el('div');
-  resultsTitle.textContent = 'Pricing';
+  resultsTitle.textContent = 'Results';
   const kv = el('div', { class: 'kv' });
 
   const kStatus = el('div');
@@ -61,7 +61,7 @@ function createApp(root: HTMLElement): void {
   const vStatus = el('div', { 'data-testid': 'pricing-status' });
 
   const kPv = el('div');
-  kPv.textContent = 'PV';
+  kPv.textContent = 'Value';
   const vPv = el('div', { 'data-testid': 'pricing-pv' });
 
   const kError = el('div');
