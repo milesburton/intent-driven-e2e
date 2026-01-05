@@ -124,7 +124,7 @@ Steps (Windows host):
      On the Windows host:
 
      ```powershell
-     npx openfin-cli@latest --launch --manifest-url http://localhost:6001/openfin.app.json
+     npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
      ```
 
 3. Run OpenFin tests:
