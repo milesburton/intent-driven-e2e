@@ -32,11 +32,9 @@ ELIF5: From the dev container + Windows host (Git Bash only)
 1. In the dev container, serve the app and manifest:
 
    ```bash
-   # Choose one free app port, e.g. 5180, and use it everywhere
-   APP_PORT=5180 pnpm preview:custom -- --port "$APP_PORT"
-   APP_PORT=5180 pnpm openfin:port
+   pnpm preview          # app on 0.0.0.0:5500 (strict)
    pnpm manifest:serve   # manifest on 6002
-````
+   ```
 
 2. On the Windows host, launch OpenFin with the manifest URL:
 
@@ -112,7 +110,7 @@ Notes:
 
 If you develop inside a Linux dev container on a Windows host (WSL/Docker Desktop), run OpenFin on the host and drive it from the container over CDP:
 
-1. In the dev container, serve the app (it binds to `0.0.0.0:6000`):
+1. In the dev container, serve the app (it binds to `0.0.0.0:5500`):
 
    ```bash
    pnpm preview
@@ -142,3 +140,4 @@ If you develop inside a Linux dev container on a Windows host (WSL/Docker Deskto
 ```
 
 ```
+````

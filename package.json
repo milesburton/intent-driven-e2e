@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite app --config app/vite.config.ts",
     "build": "vite build app --config app/vite.config.ts",
-    "preview": "vite preview app --config app/vite.config.ts --host 0.0.0.0 --port 6000 --strictPort",
+    "preview": "vite preview app --config app/vite.config.ts --host 0.0.0.0 --port 5500 --strictPort",
     "preview:8080": "vite preview app --config app/vite.config.ts --host 0.0.0.0 --port 8080 --strictPort",
     "manifest:serve": "pnpm dlx http-server -p 6002 .",
     "preview:custom": "vite preview app --config app/vite.config.ts --host 0.0.0.0 --strictPort",
