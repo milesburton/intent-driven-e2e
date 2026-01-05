@@ -14,7 +14,9 @@ export class OpenFinFormApp implements RequestFormApp {
     private readonly baseUrl: string,
     cdpUrl?: string
   ) {
-    this.cdpUrl = cdpUrl ?? process.env.OPENFIN_CDP_URL ?? 'http://localhost:9222';
+    const defaultCdpUrl =
+      process.platform === 'linux' ? 'http://host.docker.internal:9222' : 'http://localhost:9222';
+    this.cdpUrl = cdpUrl ?? process.env.OPENFIN_CDP_URL ?? defaultCdpUrl;
   }
 
   public async init(): Promise<void> {

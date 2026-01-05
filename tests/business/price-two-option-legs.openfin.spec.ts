@@ -6,7 +6,7 @@ const enabled = process.env.OPENFIN === '1';
 
 (enabled ? describe : describe.skip)('OpenFin adapter', () => {
   test('compute two items (openfin adapter)', async () => {
-    const baseUrl = 'http://127.0.0.1:6000';
+    const baseUrl = 'http://127.0.0.1:5500';
     const app = new OpenFinFormApp(baseUrl);
     await app.init();
 
