@@ -2,8 +2,6 @@ import './styles.css';
 import type { OptionLeg, PricingResult, Side, OptionType } from './types';
 import { parsePricingResult } from './utils/pricing';
 
-type JsonObject = Record<string, unknown>;
-
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attrs?: Record<string, string>
