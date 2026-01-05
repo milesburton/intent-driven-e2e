@@ -8,7 +8,7 @@ const enabled = process.env.OPENFIN === '1';
     const baseUrl = 'http://127.0.0.1:5500';
     const app = new OpenFinFormApp(baseUrl);
     await app.init();
- 
+
     await app.startNewRequest();
     const result = await app.compute();
 
