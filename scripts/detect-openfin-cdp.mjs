@@ -4,7 +4,7 @@
 
 import http from 'node:http';
 
-function getJson(url) {
+function getJson(url, timeoutMs = 400) {
   return new Promise((resolve, reject) => {
     const req = http.get(url, (res) => {
       const { statusCode } = res;
@@ -23,28 +23,19 @@ function getJson(url) {
       });
     });
     req.on('error', (err) => resolve({ ok: false, error: err }));
-    req.setTimeout(1000, () => {
+    req.setTimeout(timeoutMs, () => {
       req.destroy(new Error('timeout'));
     });
   });
 }
 
 async function detect() {
-  const hosts = [process.env.OPENFIN_HOST || 'host.docker.internal', '127.0.0.1'];
+  const isLinux = process.platform === 'linux';
+  const hosts = [process.env.OPENFIN_HOST || (isLinux ? 'host.docker.internal' : '127.0.0.1')];
   const port = process.env.OPENFIN_PORT || '9222';
-  const endpoints = ['json/version', 'json', 'json/list'];
-  for (const host of hosts) {
-    for (const ep of endpoints) {
-      const url = `http://${host}:${port}/${ep}`;
-      const res = await getJson(url);
-      if (!res.ok) continue;
-      const body = res.data;
-      if (ep === 'json/version' && body?.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
-      if ((ep === 'json' || ep === 'json/list') && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) {
-        return body[0].webSocketDebuggerUrl;
-      }
-    }
-  }
+  const url = `http://${hosts[0]}:${port}/json/version`;
+  const res = await getJson(url);
+  if (res.ok && res.data?.webSocketDebuggerUrl) return res.data.webSocketDebuggerUrl;
   return null;
 }
 

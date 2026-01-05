@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${OPENFIN_PRECOMMIT:-1}" == "0" ]]; then
+  echo "[pre-commit][openfin] disabled via OPENFIN_PRECOMMIT=0"
+  exit 0
+fi
+
 echo "[pre-commit][openfin] checking availability..."
 WS_URL=$(node scripts/detect-openfin-cdp.mjs || true)
 if [[ -z "${WS_URL:-}" ]];
