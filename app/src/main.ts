@@ -41,7 +41,7 @@ function createApp(root: HTMLElement): void {
   const table = el('table', { 'data-testid': 'items-table' });
   const thead = el('thead');
   const headRow = el('tr');
-  for (const h of ['Side', 'Type', 'Strike', 'Expiry', 'Quantity', 'Remove']) {
+  for (const h of ['Direction', 'Category', 'Value', 'Date', 'Quantity', 'Remove']) {
     const th = el('th');
     th.textContent = h;
     headRow.append(th);
@@ -84,35 +84,35 @@ function createApp(root: HTMLElement): void {
       const row = el('tr', { 'data-testid': `item-row-${idx}` });
 
       const sideSel = el('select', { 'data-testid': `item-side-${idx}` });
-      const sideBuy = el('option');
-      sideBuy.value = 'BUY';
-      sideBuy.textContent = 'BUY';
-      const sideSell = el('option');
-      sideSell.value = 'SELL';
-      sideSell.textContent = 'SELL';
-      sideSel.append(sideBuy, sideSell);
+      const sideIn = el('option');
+      sideIn.value = 'IN';
+      sideIn.textContent = 'IN';
+      const sideOut = el('option');
+      sideOut.value = 'OUT';
+      sideOut.textContent = 'OUT';
+      sideSel.append(sideIn, sideOut);
       sideSel.value = item.side;
 
       sideSel.addEventListener('change', () => {
         const v = sideSel.value;
-        if (v === 'BUY' || v === 'SELL') {
+        if (v === 'IN' || v === 'OUT') {
           item.side = v as Direction;
         }
       });
 
       const typeSel = el('select', { 'data-testid': `item-type-${idx}` });
-      const callOpt = el('option');
-      callOpt.value = 'CALL';
-      callOpt.textContent = 'CALL';
-      const putOpt = el('option');
-      putOpt.value = 'PUT';
-      putOpt.textContent = 'PUT';
-      typeSel.append(callOpt, putOpt);
+      const aOpt = el('option');
+      aOpt.value = 'A';
+      aOpt.textContent = 'A';
+      const bOpt = el('option');
+      bOpt.value = 'B';
+      bOpt.textContent = 'B';
+      typeSel.append(aOpt, bOpt);
       typeSel.value = item.type;
 
       typeSel.addEventListener('change', () => {
         const v = typeSel.value;
-        if (v === 'CALL' || v === 'PUT') {
+        if (v === 'A' || v === 'B') {
           item.type = v as Kind;
         }
       });
@@ -175,7 +175,7 @@ function createApp(root: HTMLElement): void {
 
   async function price(): Promise<void> {
     if (state.items.length === 0) {
-      state.result = { status: 'FAILED', error: 'No legs' };
+      state.result = { status: 'FAILED', error: 'No items' };
       renderResults();
       return;
     }
@@ -206,8 +206,8 @@ function createApp(root: HTMLElement): void {
 
   addLegBtn.addEventListener('click', () => {
     state.items.push({
-      side: 'BUY',
-      type: 'CALL',
+      side: 'IN',
+      type: 'A',
       strike: 100,
       expiry: '2026-06-01',
       quantity: 1

@@ -1,5 +1,5 @@
-export type Direction = 'BUY' | 'SELL';
-export type Kind = 'CALL' | 'PUT';
+export type Direction = 'IN' | 'OUT';
+export type Kind = 'A' | 'B';
 
 export interface RequestItem {
   side: Direction;

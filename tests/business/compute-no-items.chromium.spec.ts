@@ -11,6 +11,6 @@ test('compute with no items returns FAILED (chromium adapter)', async () => {
   const result = await fixture.app.compute();
 
   expect(result.status).toBe('FAILED');
-  expect(result.error).toBe('No legs');
+  expect(result.error).toBe('No items');
   expect(result.pv).toBeUndefined();
 });

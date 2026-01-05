@@ -33,4 +33,12 @@ export class ComputeResults {
         throw new Error(`Unexpected status: "${value}"`);
     }
   }
+
+  public async waitForResult(timeoutMs = 30000): Promise<ComputeResult> {
+    await this.page
+      .locator('[data-testid="result-status"]')
+      .filter({ hasText: /^(PRICED|FAILED)$/ })
+      .waitFor({ timeout: timeoutMs });
+    return this.read();
+  }
 }

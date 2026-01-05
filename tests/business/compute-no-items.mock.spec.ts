@@ -7,6 +7,6 @@ test('compute with no items returns FAILED (mock adapter)', async () => {
   const result = await app.compute();
 
   expect(result.status).toBe('FAILED');
-  expect(result.error).toBe('No legs');
+  expect(result.error).toBe('No items');
   expect(result.pv).toBeUndefined();
 });

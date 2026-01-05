@@ -20,7 +20,8 @@ export class OpenFinFormApp implements RequestFormApp {
   }
 
   public async init(): Promise<void> {
-    const browser = await chromium.connectOverCDP(this.cdpUrl);
+    const resolvedUrl = await this.resolveCdpUrl(this.cdpUrl);
+    const browser = await chromium.connectOverCDP(resolvedUrl);
     this.browser = browser;
 
     // Find a page that matches our baseUrl; otherwise open a new one.
@@ -53,7 +54,7 @@ export class OpenFinFormApp implements RequestFormApp {
   public async compute(): Promise<ComputeResult> {
     if (!this.form) throw new Error('Not initialized');
     await this.form.clickCompute();
-    return await this.form.results.read();
+    return await this.form.results.waitForResult();
   }
 
   public async dispose(): Promise<void> {
@@ -61,5 +62,52 @@ export class OpenFinFormApp implements RequestFormApp {
     this.browser = null;
     this.page = null;
     this.form = null;
+  }
+
+  private async resolveCdpUrl(cdpUrl: string): Promise<string> {
+    // If user provided a websocket URL, use as-is
+    if (cdpUrl.startsWith('ws://') || cdpUrl.startsWith('wss://')) {
+      return cdpUrl;
+    }
+
+    // Try to read websocket debugger URL from DevTools JSON endpoint
+    const tryEndpoints = ['json/version', 'json', 'json/list'];
+    for (const ep of tryEndpoints) {
+      try {
+        const url = new URL(cdpUrl);
+        url.pathname = `/${ep}`;
+        const res = await fetch(url, { method: 'GET' });
+        if (!res.ok) continue;
+        const body = await res.json();
+        if (ep === 'json/version' && body?.webSocketDebuggerUrl) {
+          return body.webSocketDebuggerUrl as string;
+        }
+        if (
+          (ep === 'json' || ep === 'json/list') &&
+          Array.isArray(body) &&
+          body[0]?.webSocketDebuggerUrl
+        ) {
+          return body[0].webSocketDebuggerUrl as string;
+        }
+      } catch {
+        // ignore and try next endpoint
+      }
+    }
+
+    // As a last resort, return original URL and let Playwright handle/throw
+    // Augment error with guidance by doing a lightweight GET to signal reachability
+    try {
+      const res = await fetch(cdpUrl, { method: 'GET' });
+      if (!res.ok) {
+        throw new Error(
+          `OpenFin DevTools at ${cdpUrl} returned status ${res.status}. Provide ws:// via OPENFIN_CDP_URL.`
+        );
+      }
+    } catch (e) {
+      throw new Error(
+        `Cannot reach OpenFin DevTools at ${cdpUrl}. Ensure runtime args include --remote-debugging-port=9222 and consider ws:// URL via OPENFIN_CDP_URL.`
+      );
+    }
+    return cdpUrl;
   }
 }

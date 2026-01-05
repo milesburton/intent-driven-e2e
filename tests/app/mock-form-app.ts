@@ -23,12 +23,12 @@ export class MockFormApp implements RequestFormApp {
 
   public async compute(): Promise<ComputeResult> {
     if (this.items.length === 0) {
-      return { status: 'FAILED', error: 'No legs' };
+      return { status: 'FAILED', error: 'No items' };
     }
 
     const pv = this.items.reduce((acc, item) => {
-      const sideSign = item.side === 'BUY' ? 1 : -1;
-      const typeScale = item.type === 'CALL' ? 1.0 : 0.9;
+      const sideSign = item.side === 'IN' ? 1 : -1;
+      const typeScale = item.type === 'A' ? 1.0 : 0.9;
       return acc + sideSign * item.quantity * item.strike * typeScale;
     }, 0);
 

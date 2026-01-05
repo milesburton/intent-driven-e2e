@@ -14,7 +14,6 @@ const enabled = process.env.OPENFIN === '1';
     await app.addItem(items.itemA);
     await app.addItem(items.itemB);
     const result = await app.compute();
-
     expect(result.status === 'PRICED' || result.status === 'FAILED').toBe(true);
 
     await app.dispose();

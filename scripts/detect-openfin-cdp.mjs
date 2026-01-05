@@ -2,8 +2,19 @@
 // Detect OpenFin DevTools websocket URL and print it to stdout.
 // Order: honor OPENFIN_CDP_URL if provided, else probe common hosts/endpoints.
 // Exits 0 with URL on success, 2 on not found, 1 on unexpected error.
-
 import http from 'node:http';
+import dns from 'node:dns/promises';
+
+async function resolveHost(host) {
+  // If already an IP, return as-is
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) return host;
+  try {
+    const { address } = await dns.lookup(host);
+    return address;
+  } catch {
+    return null;
+  }
+}
 
 function getJson(url, timeoutMs = 400) {
   return new Promise((resolve, reject) => {
@@ -36,7 +47,6 @@ async function detect() {
   if (provided && (provided.startsWith('ws://') || provided.startsWith('wss://'))) {
     return provided;
   }
-
   const isLinux = process.platform === 'linux';
   const hosts = [
     process.env.OPENFIN_HOST || (isLinux ? 'host.docker.internal' : '127.0.0.1'),
@@ -44,24 +54,32 @@ async function detect() {
   ];
   const port = process.env.OPENFIN_PORT || '9222';
   const endpoints = ['json/version', 'json'];
+
   for (const host of hosts) {
+    // Resolve hostname to IP to avoid Chrome's Host header rejection
+    const ip = await resolveHost(host);
+    if (!ip) continue;
+
     let anyHttp = false;
     for (const ep of endpoints) {
-      const url = `http://${host}:${port}/${ep}`;
+      const url = `http://${ip}:${port}/${ep}`;
       const res = await getJson(url);
       if (res.ok) {
         const body = res.data;
-        if (ep === 'json/version' && body?.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
-        if (ep === 'json' && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) return body[0].webSocketDebuggerUrl;
+        if (ep === 'json/version' && body?.webSocketDebuggerUrl) {
+          // Replace localhost/hostname in wsUrl with the resolved IP
+          return body.webSocketDebuggerUrl.replace(/ws:\/\/[^:/]+/, `ws://${ip}`);
+        }
+        if (ep === 'json' && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) {
+          return body[0].webSocketDebuggerUrl.replace(/ws:\/\/[^:/]+/, `ws://${ip}`);
+        }
         anyHttp = true;
       } else if (typeof res.status === 'number') {
-        // Got an HTTP status but not JSON we expected — still indicates something listening
         anyHttp = true;
       }
     }
     if (anyHttp) {
-      // Return base HTTP URL to signal availability even if ws URL is unknown
-      return `http://${host}:${port}`;
+      return `http://${ip}:${port}`;
     }
   }
   return null;
