@@ -77,19 +77,12 @@ Install:
 
 ```bash
 pnpm install
-pnpm exec playwright install --with-deps chromium
 ```
 
 Run tests:
 
 ```bash
 pnpm test
-```
-
-Run the app manually:
-
-```bash
-pnpm dev
 ```
 
 ## Dev Container
