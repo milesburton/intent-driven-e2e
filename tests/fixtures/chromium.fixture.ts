@@ -2,8 +2,8 @@ import { chromium, type Browser, type Page } from 'playwright';
 import { beforeAll, afterAll } from 'vitest';
 import type { RunningServer } from './server';
 import { startViteAppServer } from './server';
-import { ChromiumTradeTicketApp, type PricingInterceptor } from '../app/ChromiumTradeTicketApp';
-import type { TradeTicketApp } from '../domain/TradeTicketApp';
+import { ChromiumTradeTicketApp, type PricingInterceptor } from '../app/chromium-trade-ticket-app';
+import type { TradeTicketApp } from '../domain/trade-ticket-app';
 
 export interface ChromiumFixture {
   readonly app: TradeTicketApp;

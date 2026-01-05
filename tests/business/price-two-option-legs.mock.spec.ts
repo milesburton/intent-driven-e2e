@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import type { OptionLeg } from '../domain/models';
-import { MockTradeTicketApp } from '../app/MockTradeTicketApp';
+import { MockTradeTicketApp } from '../app/mock-trade-ticket-app';
 
 const buyCall: OptionLeg = {
   side: 'BUY',
