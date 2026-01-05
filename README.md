@@ -1,30 +1,28 @@
-# Playwright Domain-Driven Testing Example (Trade Ticket)
+# Playwright Domain-Driven Testing Example
 
 ## Overview
 
-This repository demonstrates a pragmatic approach to end-to-end testing of a Chromium/OpenFin-style trade ticket using Playwright **without coupling business tests to UI structure**.
+This repository demonstrates a pragmatic approach to end-to-end testing of an OpenFin trade ticket using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/).
 
-The key constraint is simple:
+Our objective is to abstract the user's intent, placing a trade for example, from the underlying implementation such as clicking a button. With a suitable abstraction it shouldn't matter what is under test, whether that be a web app, desktop GUI or a Bloomberg terminal.
 
-- Page Objects are necessary.
-- Page Objects should not appear in business tests.
-- Tests should express **business intent**, not UI mechanics.
+In this example we have a mock webapp which is presented within an OpenFin container. The tests use a Page Object to interact with the page, but we do not want to expose the underlying implementation to the test author.
 
-This is achieved by introducing a **typed domain interface** that represents the capabilities of the application under test. Playwright and UI concerns are isolated behind that interface.
+We achieve this by introducing a **typed domain interface** that represents the capabilities of the application under test. Playwright and UI concerns are isolated behind that interface.
 
 ## Architecture
 
 ```
-Business Tests
+Tests (express business intent)
    ↓
 Typed Domain Interface (TradeTicketApp)
    ↓
-Application Adapter (Playwright implementation)
+Driver (Playwright implementation)
    ↓
 Page Objects (selectors, waits, retries)
 ```
 
-Only the adapter layer knows Playwright exists.
+Only the driver layer knows Playwright exists.
 
 ## The application under test
 
@@ -37,9 +35,9 @@ A minimal but realistic trade ticket UI is included under `app/` (Vite + TypeScr
 
 The pricing endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
 
-## Business-level test example
+## Test example
 
-Business tests depend on the domain interface:
+Tests depend on the domain interface:
 
 ```ts
 export interface TradeTicketApp {
@@ -49,7 +47,7 @@ export interface TradeTicketApp {
 }
 ```
 
-A business test reads like intent:
+A test reads like intent:
 
 ```ts
 await app.startNewTicket();
