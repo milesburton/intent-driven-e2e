@@ -1,4 +1,4 @@
-import type { TradeTicketApp } from '../domain/trade-ticket-app';
+import type { TradeTicketApp } from '../domain/trade-ticket-app.interface';
 import type { OptionLeg, PricingResult } from '../domain/models';
 
 function validateLeg(leg: OptionLeg): string | null {

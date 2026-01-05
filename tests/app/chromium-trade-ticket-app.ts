@@ -1,5 +1,5 @@
 import type { Page, Route, Request } from 'playwright';
-import type { TradeTicketApp } from '../domain/trade-ticket-app';
+import type { TradeTicketApp } from '../domain/trade-ticket-app.interface';
 import type { OptionLeg, PricingResult } from '../domain/models';
 import { TradeTicketPage } from '../po/trade-ticket-page';
 

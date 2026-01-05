@@ -3,7 +3,7 @@ import { beforeAll, afterAll } from 'vitest';
 import type { RunningServer } from './server';
 import { startViteAppServer } from './server';
 import { ChromiumTradeTicketApp, type PricingInterceptor } from '../app/chromium-trade-ticket-app';
-import type { TradeTicketApp } from '../domain/trade-ticket-app';
+import type { TradeTicketApp } from '../domain/trade-ticket-app.interface';
 
 export interface ChromiumFixture {
   readonly app: TradeTicketApp;

@@ -18,7 +18,9 @@ module.exports = [
         tsconfigRootDir: __dirname
       },
       globals: {
-        process: 'readonly'
+        process: 'readonly',
+        window: 'readonly',
+        document: 'readonly'
       }
     },
     plugins: {
@@ -26,12 +28,30 @@ module.exports = [
       import: importPlugin
     },
     rules: {
+      // Use TypeScript-aware rules instead of base ones
       ...js.configs.recommended.rules,
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true
+        }
+      ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/require-await': 'error',
       'import/no-unresolved': 'off'
+    }
+  },
+  {
+    files: ['tests/**/*.ts', 'tests/**/*.tsx'],
+    rules: {
+      // Relax strict rules for test support files
+      '@typescript-eslint/require-await': 'off'
     }
   },
   {
