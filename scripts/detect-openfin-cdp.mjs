@@ -45,13 +45,23 @@ async function detect() {
   const port = process.env.OPENFIN_PORT || '9222';
   const endpoints = ['json/version', 'json'];
   for (const host of hosts) {
+    let anyHttp = false;
     for (const ep of endpoints) {
       const url = `http://${host}:${port}/${ep}`;
       const res = await getJson(url);
-      if (!res.ok) continue;
-      const body = res.data;
-      if (ep === 'json/version' && body?.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
-      if (ep === 'json' && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) return body[0].webSocketDebuggerUrl;
+      if (res.ok) {
+        const body = res.data;
+        if (ep === 'json/version' && body?.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
+        if (ep === 'json' && Array.isArray(body) && body[0]?.webSocketDebuggerUrl) return body[0].webSocketDebuggerUrl;
+        anyHttp = true;
+      } else if (typeof res.status === 'number') {
+        // Got an HTTP status but not JSON we expected — still indicates something listening
+        anyHttp = true;
+      }
+    }
+    if (anyHttp) {
+      // Return base HTTP URL to signal availability even if ws URL is unknown
+      return `http://${host}:${port}`;
     }
   }
   return null;

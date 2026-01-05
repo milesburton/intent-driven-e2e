@@ -10,7 +10,7 @@
 
 ## Overview
 
-This repository demonstrates a pragmatic approach to end-to-end testing of a generic request form using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/).
+This repository demonstrates a pragmatic approach to end-to-end testing of a generic request form using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/) and includes Screenplay pattern examples using the same abstraction.
 
 Our objective is to abstract the user's intent, placing a trade for example, from the underlying implementation such as clicking a button. With a suitable abstraction it shouldn't matter what is under test, whether that be a web app, desktop GUI or a Bloomberg terminal.
 
@@ -20,70 +20,96 @@ We achieve this by introducing a **typed domain interface** that represents the 
 
 ## Architecture
 
-````
-Tests (express business intent)
-   ↓
-Typed Domain Interface (RequestFormApp)
-   ↓
-## OpenFin (optional)
+    Tests (express business intent)
+       ↓
+    Typed Domain Interface (RequestFormApp)
+       ↓
+    Driver / Screenplay Tasks (Playwright implementation)
+       ↓
+    Page Objects (selectors, waits, retries)
 
-ELIF5: From the dev container + Windows host (Git Bash only)
+Only the driver layer knows Playwright exists.
 
-1. In the dev container, serve the app and manifest:
+## The application under test
 
-   ```bash
-   pnpm preview          # app on 0.0.0.0:5500 (strict)
-   pnpm manifest:serve   # manifest on 6002
-   ```
+A minimal but realistic request form UI is included under `app/` (Vite + TypeScript). It models:
 
-2. On the Windows host, launch OpenFin with the manifest URL (Git Bash):
+- Creating a new ticket
+- Adding option legs (BUY/SELL, CALL/PUT, strike, expiry, quantity)
+- Pricing the ticket via an external POST request to `http://pricing.acmibank/price`
 
-   ```bash
-   # Install OpenFin if not already installed
-   if [ ! -f "$LOCALAPPDATA/OpenFin/OpenFinRVM.exe" ]; then
-     curl -sL -o "$TEMP/OpenFinRVM.zip" https://cdn.openfin.co/release/rvm/latest && \
-     unzip -oq "$TEMP/OpenFinRVM.zip" -d "$TEMP/openfin_rvm"
-   fi
+The pricing endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
 
-   # Clear cache and launch
-   rm -rf "$LOCALAPPDATA/OpenFin/apps" "$LOCALAPPDATA/OpenFin/cache"
-   "${LOCALAPPDATA}/OpenFin/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json" 2>/dev/null || \
-   "$TEMP/openfin_rvm/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json"
-   ```
+## Test example
 
-   Or download and run the script directly from the dev container (manifest server on 6002):
+Tests depend on the domain interface:
 
-   One-liner (pipe to bash):
+```ts
+export interface RequestFormApp {
+  startNewTicket(): Promise<void>;
+  addOptionLeg(leg: OptionLeg): Promise<void>;
+  price(): Promise<PricingResult>;
+}
+```
 
-   ```bash
-   curl -sL http://127.0.0.1:6002/scripts/openfin-launch.sh | bash
-   ```
+A test reads like intent:
 
-   Safer alternative (save to TEMP then execute):
+```ts
+await app.startNewTicket();
+await app.addOptionLeg(buyCall);
+await app.addOptionLeg(sellCall);
+const result = await app.price();
+```
 
-   ```bash
-   curl -sL -o "$TEMP/openfin-launch.sh" http://127.0.0.1:6002/scripts/openfin-launch.sh
-   bash "$TEMP/openfin-launch.sh"
-   ```
+No selectors. No UI widget vocabulary.
 
-3. Back in the dev container, run the OpenFin tests:
+## Running locally
 
-   ```bash
-   pnpm test:e2e:openfin
-   ```
+### Prerequisites
 
-Notes:
+- Node.js 22+
+- pnpm 9+
+- Playwright browsers installed: `pnpm exec playwright install --with-deps chromium`
 
-- The OpenFin adapter connects over CDP. In the dev container it defaults to `http://host.docker.internal:9222`; on Windows it defaults to `http://localhost:9222`.
-- If needed, override CDP explicitly:
+### Commands
 
-  ```bash
-  export OPENFIN_CDP_URL=http://<windows-host-ip>:9222
-  ```
+Install:
+
+```bash
+pnpm install
+pnpm exec playwright install --with-deps chromium
+```
+
+Run tests:
+
+```bash
+pnpm test
+```
+
+Run the app manually:
+
+```bash
+pnpm dev
+```
+
+## Dev Container
+
+This project is designed to run inside a Dev Container.
+
+### Headed vs headless execution
+
+- Headless mode works inside the Dev Container by default.
+- Headed mode does not, unless:
+  - You are running on macOS and executing on the host machine, or
+  - You provide an X server on the host and forward X11.
+
+If you need headed mode, run Playwright on the host machine.
+
+The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
 
 ## Playwright (Chromium) tests
 
-ELIF5: Run from the dev container
+ELI5: Run from the dev container
 
 ```bash
 pnpm test:e2e:chromium
@@ -95,68 +121,31 @@ Or run the full suite:
 pnpm test
 ```
 
-- Option A — Local file (repo on host): run from the repo folder on Windows host.
+## OpenFin (optional)
 
-```powershell
-npx openfin-cli@latest --launch --manifest-file openfin.app.json
+OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
+
+### Running the end-to-end tests using OpenFin 
+
+**Step 1.** In the dev container, serve the app and manifest:
+
+```bash
+pnpm preview          
+pnpm manifest:serve 
 ```
 
-- Option B — Manifest URL (no repo on host): serve the manifest from the container (on port 6002), then launch with URL.
+**Step 2.** Download and run the script directly from the dev container (manifest server on 6002):
 
-  In the dev container:
-
-  ```bash
-  pnpm manifest:serve
-  ```
-
-  On the Windows host:
-
-  ```powershell
-  npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
-  ```
-
-3. Run OpenFin tests:
-
-   ```bash
-   pnpm test:e2e:openfin   # runs all tests under tests/** with OPENFIN=1
-   ```
-
-Notes:
-
-- OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
-- A dedicated Windows workflow can be added to run these tests on `windows-latest`.
-
-### Running OpenFin from the dev container (Windows host)
-
-If you develop inside a Linux dev container on a Windows host (WSL/Docker Desktop), run OpenFin on the host and drive it from the container over CDP:
-
-1. In the dev container, serve the app (it binds to `0.0.0.0:5500`):
-
-   ```bash
-   pnpm preview
-   ```
-
-2. On the Windows host, launch OpenFin pointing at the manifest:
-
-   ```powershell
-   npx openfin-cli@latest --launch --manifest-file openfin.app.json
-   ```
-
-3. Back in the dev container, run the OpenFin specs. On Linux the adapter defaults CDP to `http://host.docker.internal:9222`, so you typically only need:
-
-   ```bash
-   pnpm test:e2e:openfin
-   ```
-
-   If needed, override explicitly:
-
-   ```bash
-   export OPENFIN=1
-   export OPENFIN_CDP_URL=http://<windows-host-ip>:9222
-   pnpm test:e2e:openfin
-   ```
-
+```bash
+curl -sL http://127.0.0.1:6002/scripts/openfin-launch.sh | bash
 ```
 
+**Step 3.** Back in the dev container, run the OpenFin tests:
+
+```bash
+pnpm test:e2e:openfin
 ```
-````
+
+## CI (GitHub Actions)
+
+The workflow installs dependencies, installs Chromium for Playwright, and runs Vitest.
