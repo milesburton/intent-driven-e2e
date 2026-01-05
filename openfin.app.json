@@ -6,7 +6,7 @@
   "startup_app": {
     "name": "DomainDrivenUITesting",
     "uuid": "domain-driven-ui-testing-app",
-    "url": "http://127.0.0.1:6000",
+    "url": "http://127.0.0.1:8080",
     "autoShow": true
   }
 }

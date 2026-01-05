@@ -32,14 +32,20 @@ ELIF5: From the dev container + Windows host
 1. In the dev container, serve the app and manifest:
 
    ```bash
-   pnpm preview        # app on 6000
+   # If 6000 is blocked on Windows, use 8080
+   pnpm preview:8080   # app on 8080 (or pnpm preview for 6000)
    pnpm manifest:serve # manifest on 6002
 ````
 
 2. On the Windows host, launch OpenFin with the manifest URL:
 
    ```powershell
+   # In Git Bash, use cmd to run the .exe if needed
    npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
+   # or download and run RVM directly:
+   #   curl -L -o OpenFinRVM.zip https://cdn.openfin.co/release/rvm/latest
+   #   unzip OpenFinRVM.zip -d openfin_rvm
+   #   cmd //c "openfin_rvm\\OpenFinRVM.exe --config=http://127.0.0.1:6002/openfin.app.json"
    ```
 
 3. Back in the dev container, run the OpenFin tests:
