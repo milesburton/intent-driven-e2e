@@ -98,7 +98,7 @@ You can run the same domain-level tests against an OpenFin-hosted runtime on Win
 
 Steps (Windows host):
 
-1. Build and serve the app:
+1. Build and serve the app (preview on port 6000):
 
    ```powershell
    pnpm install
@@ -113,7 +113,7 @@ Steps (Windows host):
    npx openfin-cli@latest --launch --manifest-file openfin.app.json
    ```
 
-   - Option B — Manifest URL (no repo on host): serve the manifest from the container, then launch with URL.
+   - Option B — Manifest URL (no repo on host): serve the manifest from the container (on port 6002), then launch with URL.
 
      In the dev container:
 
