@@ -108,9 +108,8 @@ npx openfin-cli@latest --launch --manifest-file openfin.app.json
 
 3. Run OpenFin tests:
 
-   ```powershell
-   $env:OPENFIN = "1"
-   pnpm vitest run tests/business/*.openfin.spec.ts
+   ```bash
+   pnpm test:e2e:openfin   # runs all tests under tests/** with OPENFIN=1
    ```
 
 Notes:
@@ -137,8 +136,7 @@ If you develop inside a Linux dev container on a Windows host (WSL/Docker Deskto
 3. Back in the dev container, run the OpenFin specs. On Linux the adapter defaults CDP to `http://host.docker.internal:9222`, so you typically only need:
 
    ```bash
-   export OPENFIN=1
-   pnpm vitest run tests/business/*.openfin.spec.ts
+   pnpm test:e2e:openfin
    ```
 
    If needed, override explicitly:
@@ -146,7 +144,7 @@ If you develop inside a Linux dev container on a Windows host (WSL/Docker Deskto
    ```bash
    export OPENFIN=1
    export OPENFIN_CDP_URL=http://<windows-host-ip>:9222
-   pnpm vitest run tests/business/*.openfin.spec.ts
+   pnpm test:e2e:openfin
    ```
 
 ```
