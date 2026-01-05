@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+# Run lint before pushing
+pnpm -s lint
+
+# Run fast tests: unit and mock-based business tests (no browsers)
+pnpm -s vitest run ./tests/unit/*.spec.ts ./tests/business/*.mock*.spec.ts

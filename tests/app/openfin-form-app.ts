@@ -103,7 +103,7 @@ export class OpenFinFormApp implements RequestFormApp {
           `OpenFin DevTools at ${cdpUrl} returned status ${res.status}. Provide ws:// via OPENFIN_CDP_URL.`
         );
       }
-    } catch (e) {
+    } catch {
       throw new Error(
         `Cannot reach OpenFin DevTools at ${cdpUrl}. Ensure runtime args include --remote-debugging-port=9222 and consider ws:// URL via OPENFIN_CDP_URL.`
       );
