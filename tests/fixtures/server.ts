@@ -13,7 +13,8 @@ export async function startViteAppServer(): Promise<RunningServer> {
     root,
     server: {
       strictPort: false,
-      port: 0
+      port: 5173,
+      host: '127.0.0.1'
     },
     logLevel: 'error'
   };

@@ -18,17 +18,17 @@ const sellCall: OptionLeg = {
   quantity: 1
 };
 
+let seenPayload: unknown | null = null;
+
+const fixture = createChromiumFixture({
+  expectedUrl: 'http://pricing.acmibank/price',
+  onRequest: (payload: unknown) => {
+    seenPayload = payload;
+  },
+  response: { status: 'PRICED', pv: 123.45 }
+});
+
 test('price two option legs (chromium adapter)', async () => {
-  let seenPayload: unknown | null = null;
-
-  const fixture = createChromiumFixture({
-    expectedUrl: 'http://pricing.acmibank/price',
-    onRequest: (payload: unknown) => {
-      seenPayload = payload;
-    },
-    response: { status: 'PRICED', pv: 123.45 }
-  });
-
   await fixture.app.startNewTicket();
   await fixture.app.addOptionLeg(buyCall);
   await fixture.app.addOptionLeg(sellCall);

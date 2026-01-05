@@ -1,0 +1,26 @@
+{
+  "name": "playwright-domain-dsl-trade-ticket",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": { "path": "/bin/bash" },
+          "fish": { "path": "/usr/bin/fish" }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "runArgs": ["--shm-size=1gb", "-e", "DISPLAY=${localEnv:DISPLAY}"],
+  "forwardPorts": [6000],
+  "postCreateCommand": "corepack prepare pnpm@9.0.0 --activate && pnpm install"
+}
