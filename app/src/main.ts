@@ -2,6 +2,9 @@ import './styles.css';
 import type { RequestItem, ComputeResult, Direction, Kind } from './types';
 import { parseComputeResult } from './utils/compute';
 
+declare const __BUILD_HASH__: string;
+window.console.log('[app] build:', __BUILD_HASH__);
+
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attrs?: Record<string, string>
