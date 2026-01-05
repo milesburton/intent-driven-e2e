@@ -1,5 +1,5 @@
 import './styles.css';
-import type { OptionLeg, PricingResult, Side, OptionType } from './types';
+import type { RequestItem, ComputeResult, Direction, Kind } from './types';
 import { parsePricingResult } from './utils/pricing';
 
 function el<K extends keyof HTMLElementTagNameMap>(
@@ -16,8 +16,8 @@ function el<K extends keyof HTMLElementTagNameMap>(
 }
 
 function createApp(root: HTMLElement): void {
-  const state: { legs: OptionLeg[]; result: PricingResult } = {
-    legs: [],
+  const state: { items: RequestItem[]; result: ComputeResult } = {
+    items: [],
     result: { status: 'IDLE' }
   };
 
@@ -80,7 +80,7 @@ function createApp(root: HTMLElement): void {
   function renderLegs(): void {
     tbody.textContent = '';
 
-    state.legs.forEach((leg, idx) => {
+    state.items.forEach((item, idx) => {
       const row = el('tr', { 'data-testid': `leg-row-${idx}` });
 
       const sideSel = el('select', { 'data-testid': `leg-side-${idx}` });
@@ -91,12 +91,12 @@ function createApp(root: HTMLElement): void {
       sideSell.value = 'SELL';
       sideSell.textContent = 'SELL';
       sideSel.append(sideBuy, sideSell);
-      sideSel.value = leg.side;
+      sideSel.value = item.side;
 
       sideSel.addEventListener('change', () => {
         const v = sideSel.value;
         if (v === 'BUY' || v === 'SELL') {
-          leg.side = v as Side;
+          item.side = v as Direction;
         }
       });
 
@@ -108,43 +108,43 @@ function createApp(root: HTMLElement): void {
       putOpt.value = 'PUT';
       putOpt.textContent = 'PUT';
       typeSel.append(callOpt, putOpt);
-      typeSel.value = leg.type;
+      typeSel.value = item.type;
 
       typeSel.addEventListener('change', () => {
         const v = typeSel.value;
         if (v === 'CALL' || v === 'PUT') {
-          leg.type = v as OptionType;
+          item.type = v as Kind;
         }
       });
 
       const strikeInput = el('input', { type: 'number', 'data-testid': `leg-strike-${idx}` });
-      strikeInput.value = String(leg.strike);
+      strikeInput.value = String(item.strike);
       strikeInput.addEventListener('input', () => {
         const n = Number(strikeInput.value);
         if (Number.isFinite(n)) {
-          leg.strike = n;
+          item.strike = n;
         }
       });
 
       const expiryInput = el('input', { type: 'date', 'data-testid': `leg-expiry-${idx}` });
-      expiryInput.value = leg.expiry;
+      expiryInput.value = item.expiry;
       expiryInput.addEventListener('input', () => {
-        leg.expiry = expiryInput.value;
+        item.expiry = expiryInput.value;
       });
 
       const qtyInput = el('input', { type: 'number', 'data-testid': `leg-qty-${idx}` });
-      qtyInput.value = String(leg.quantity);
+      qtyInput.value = String(item.quantity);
       qtyInput.addEventListener('input', () => {
         const n = Number(qtyInput.value);
         if (Number.isFinite(n)) {
-          leg.quantity = n;
+          item.quantity = n;
         }
       });
 
       const removeBtn = el('button', { type: 'button', 'data-testid': `leg-remove-${idx}` });
       removeBtn.textContent = 'Remove';
       removeBtn.addEventListener('click', () => {
-        state.legs.splice(idx, 1);
+        state.items.splice(idx, 1);
         renderLegs();
       });
 
@@ -167,14 +167,14 @@ function createApp(root: HTMLElement): void {
   }
 
   function reset(): void {
-    state.legs = [];
+    state.items = [];
     state.result = { status: 'IDLE' };
     renderLegs();
     renderResults();
   }
 
   async function price(): Promise<void> {
-    if (state.legs.length === 0) {
+    if (state.items.length === 0) {
       state.result = { status: 'FAILED', error: 'No legs' };
       renderResults();
       return;
@@ -187,7 +187,7 @@ function createApp(root: HTMLElement): void {
       const response = await fetch('http://service.local/compute', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ legs: state.legs })
+        body: JSON.stringify({ items: state.items })
       });
 
       const data: unknown = await response.json();
@@ -205,7 +205,7 @@ function createApp(root: HTMLElement): void {
   newTicketBtn.addEventListener('click', () => reset());
 
   addLegBtn.addEventListener('click', () => {
-    state.legs.push({
+    state.items.push({
       side: 'BUY',
       type: 'CALL',
       strike: 100,

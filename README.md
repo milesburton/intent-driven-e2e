@@ -9,11 +9,11 @@
 
 ## Overview
 
-This repository demonstrates a pragmatic approach to end-to-end testing of an OpenFin trade ticket using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/).
+This repository demonstrates a pragmatic approach to end-to-end testing of a generic request form using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/).
 
 Our objective is to abstract the user's intent, placing a trade for example, from the underlying implementation such as clicking a button. With a suitable abstraction it shouldn't matter what is under test, whether that be a web app, desktop GUI or a Bloomberg terminal.
 
-In this example we have a mock webapp which is presented within an OpenFin container. The tests use a Page Object to interact with the page, but we do not want to expose the underlying implementation to the test author.
+In this example we have a mock web app. The tests use a Page Object or Screenplay-style Tasks to interact with the page, but we do not expose the underlying implementation to the test author.
 
 We achieve this by introducing a **typed domain interface** that represents the capabilities of the application under test. Playwright and UI concerns are isolated behind that interface.
 
@@ -22,7 +22,7 @@ We achieve this by introducing a **typed domain interface** that represents the 
 ```
 Tests (express business intent)
    ↓
-Typed Domain Interface (TradeTicketApp)
+Typed Domain Interface (RequestFormApp)
    ↓
 Driver (Playwright implementation)
    ↓
@@ -33,53 +33,53 @@ Only the driver layer knows Playwright exists.
 
 ## The application under test
 
-A minimal but realistic trade ticket UI is included under `app/` (Vite + TypeScript). It models:
+A minimal request UI is included under `app/` (Vite + TypeScript). It models:
 
-- Creating a new ticket
-- Adding option legs (BUY/SELL, CALL/PUT, strike, expiry, quantity)
-- Pricing the ticket via an external POST request:
-  - `http://pricing.acmibank/price`
+- Creating a new request
+- Adding items (side/kind/value fields)
+- Computing a result via an external POST request:
+  - `http://service.local/compute`
 
-The pricing endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
+The compute endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
 
 ## Test example
 
 Tests depend on the domain interface:
 
 ```ts
-export interface TradeTicketApp {
-  startNewTicket(): Promise<void>;
-  addOptionLeg(leg: OptionLeg): Promise<void>;
-  price(): Promise<PricingResult>;
+export interface RequestFormApp {
+  startNewRequest(): Promise<void>;
+  addItem(item: RequestItem): Promise<void>;
+  compute(): Promise<ComputeResult>;
 }
 ```
 
 A test reads like intent:
 
 ```ts
-await app.startNewTicket();
-await app.addOptionLeg(buyCall);
-await app.addOptionLeg(sellCall);
-const result = await app.price();
+await app.startNewRequest();
+await app.addItem(itemA);
+await app.addItem(itemB);
+const result = await app.compute();
 ```
 
 No selectors. No UI widget vocabulary.
 
 ## Testing Approaches
 
-This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `TradeTicketApp` interface.
+This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `RequestFormApp` interface.
 
 ### Page Object Driver
 
-- **What:** A driver implements `TradeTicketApp` using Playwright and Page Objects.
+- **What:** A driver implements `RequestFormApp` using Playwright and Page Objects.
 - **How:** Tests call `app` methods; the driver coordinates selectors, waits, and request interception.
 - **Pros:** Simple mental model; direct mapping from intent to driver actions.
 - **Example:** [Chromium spec](tests/business/price-two-option-legs.chromium.spec.ts) and [Mock spec](tests/business/price-two-option-legs.mock.spec.ts).
 
 ### Screenplay Pattern
 
-- **What:** An `Actor` performs `Tasks` and answers `Questions` using the same `TradeTicketApp`.
-- **How:** Compose tasks like `StartNewTicket`, `AddOptionLeg`, `Price`; query results via `PricingStatus`, `PricingPV`.
+- **What:** An `Actor` performs `Tasks` and answers `Questions` using the same `RequestFormApp`.
+- **How:** Compose tasks like `StartNewRequest`, `AddItem`, `Compute`; query results via `ResultStatus`, `ResultValue`.
 - **Pros:** Encourages reusability and a richer vocabulary of intent; easy to extend with abilities and memory.
 - **Example:** [Chromium screenplay spec](tests/business/price-two-option-legs.chromium.screenplay.spec.ts) and [Mock screenplay spec](tests/business/price-two-option-legs.mock.screenplay.spec.ts).
 

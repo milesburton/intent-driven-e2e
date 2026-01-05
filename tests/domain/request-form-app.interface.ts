@@ -1,7 +1,7 @@
-import type { OptionLeg, PricingResult } from './models';
+import type { RequestItem, ComputeResult } from './models';
 
 export interface RequestFormApp {
-  startNewTicket(): Promise<void>;
-  addOptionLeg(_leg: OptionLeg): Promise<void>;
-  price(): Promise<PricingResult>;
+  startNewRequest(): Promise<void>;
+  addItem(_item: RequestItem): Promise<void>;
+  compute(): Promise<ComputeResult>;
 }

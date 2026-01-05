@@ -6,9 +6,9 @@ const fixture = createChromiumFixture({
   response: { status: 'PRICED', pv: 999 } // Irrelevant, no request is sent without legs
 });
 
-test('price with no legs returns FAILED (chromium adapter)', async () => {
-  await fixture.app.startNewTicket();
-  const result = await fixture.app.price();
+test('compute with no items returns FAILED (chromium adapter)', async () => {
+  await fixture.app.startNewRequest();
+  const result = await fixture.app.compute();
 
   expect(result.status).toBe('FAILED');
   expect(result.error).toBe('No legs');

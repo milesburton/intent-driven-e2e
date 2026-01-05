@@ -1,22 +1,22 @@
-import type { OptionLeg, PricingResult } from '../domain/models';
+import type { RequestItem, ComputeResult } from '../domain/models';
 import type { Actor, Task } from './core';
 
-export class StartNewTicket implements Task {
+export class StartNewRequest implements Task {
   async performAs(actor: Actor): Promise<void> {
-    await actor.app.startNewTicket();
+    await actor.app.startNewRequest();
   }
 }
 
-export class AddOptionLeg implements Task {
-  constructor(private readonly leg: OptionLeg) {}
+export class AddItem implements Task {
+  constructor(private readonly item: RequestItem) {}
   async performAs(actor: Actor): Promise<void> {
-    await actor.app.addOptionLeg(this.leg);
+    await actor.app.addItem(this.item);
   }
 }
 
-export class Price implements Task {
+export class Compute implements Task {
   async performAs(actor: Actor): Promise<void> {
-    const result: PricingResult = await actor.app.price();
-    actor.remember('pricingResult', result);
+    const result: ComputeResult = await actor.app.compute();
+    actor.remember('computeResult', result);
   }
 }

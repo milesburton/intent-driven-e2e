@@ -1,30 +1,30 @@
 import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
-import { buyCall, sellCall } from '../fixtures/legs';
+import { itemA, itemB } from '../fixtures/items';
 import { Actor } from '../screenplay/core';
-import { StartNewTicket, AddOptionLeg, Price } from '../screenplay/tasks';
-import { PricingStatus, PricingPV } from '../screenplay/questions';
+import { StartNewRequest, AddItem, Compute } from '../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../screenplay/questions';
 
 let seenPayload: unknown | null = null;
 const fixture = createChromiumFixture({
-  expectedUrl: 'http://pricing.acmibank/price',
+  expectedUrl: 'http://service.local/compute',
   onRequest: (payload: unknown) => {
     seenPayload = payload;
   },
   response: { status: 'PRICED', pv: 123.45 }
 });
 
-test('price two option legs (Screenplay, chromium adapter)', async () => {
+test('compute two items (Screenplay, chromium adapter)', async () => {
   const trader = new Actor('Trader', fixture.app);
 
   await trader.attemptsTo(
-    new StartNewTicket(),
-    new AddOptionLeg(buyCall),
-    new AddOptionLeg(sellCall),
-    new Price()
+    new StartNewRequest(),
+    new AddItem(itemA),
+    new AddItem(itemB),
+    new Compute()
   );
 
-  expect(await trader.asks(new PricingStatus())).toBe('PRICED');
-  expect(await trader.asks(new PricingPV())).toBe(123.45);
-  expect(seenPayload).toEqual({ legs: [buyCall, sellCall] });
+  expect(await trader.asks(new ResultStatus())).toBe('PRICED');
+  expect(await trader.asks(new ResultValue())).toBe(123.45);
+  expect(seenPayload).toEqual({ items: [itemA, itemB] });
 });

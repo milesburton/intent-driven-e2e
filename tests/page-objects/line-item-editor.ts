@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { OptionLeg } from '../domain/models';
+import type { RequestItem } from '../domain/models';
 
 export class LineItemEditor {
   public constructor(private readonly page: Page) {}
@@ -14,7 +14,7 @@ export class LineItemEditor {
     return after - 1;
   }
 
-  public async fillItem(index: number, item: OptionLeg): Promise<void> {
+  public async fillItem(index: number, item: RequestItem): Promise<void> {
     await this.page.locator(`[data-testid="leg-side-${index}"]`).selectOption(item.side);
     await this.page.locator(`[data-testid="leg-type-${index}"]`).selectOption(item.type);
     await this.page.locator(`[data-testid="leg-strike-${index}"]`).fill(String(item.strike));

@@ -1,10 +1,10 @@
 import type { Page } from 'playwright';
-import type { PricingResult, PricingStatus } from '../domain/models';
+import type { ComputeResult, ComputeStatus } from '../domain/models';
 
 export class ComputeResults {
   public constructor(private readonly page: Page) {}
 
-  public async read(): Promise<PricingResult> {
+  public async read(): Promise<ComputeResult> {
     const statusText =
       (await this.page.locator('[data-testid="pricing-status"]').textContent()) ?? '';
     const status = this.parseStatus(statusText.trim());
@@ -22,7 +22,7 @@ export class ComputeResults {
     return { status, pv: Number.isFinite(pv ?? NaN) ? pv : undefined, error };
   }
 
-  private parseStatus(value: string): PricingStatus {
+  private parseStatus(value: string): ComputeStatus {
     switch (value) {
       case 'IDLE':
       case 'PRICING':

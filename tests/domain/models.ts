@@ -1,18 +1,18 @@
-export type Side = 'BUY' | 'SELL';
-export type OptionType = 'CALL' | 'PUT';
+export type Direction = 'BUY' | 'SELL';
+export type Kind = 'CALL' | 'PUT';
 
-export interface OptionLeg {
-  side: Side;
-  type: OptionType;
+export interface RequestItem {
+  side: Direction;
+  type: Kind;
   strike: number;
   expiry: string; // YYYY-MM-DD
   quantity: number;
 }
 
-export type PricingStatus = 'IDLE' | 'PRICING' | 'PRICED' | 'FAILED';
+export type ComputeStatus = 'IDLE' | 'PRICING' | 'PRICED' | 'FAILED';
 
-export interface PricingResult {
-  status: PricingStatus;
+export interface ComputeResult {
+  status: ComputeStatus;
   pv?: number;
   error?: string;
 }

@@ -1,6 +1,6 @@
 import type { Page, Route, Request } from 'playwright';
 import type { RequestFormApp } from '../domain/request-form-app.interface';
-import type { OptionLeg, PricingResult } from '../domain/models';
+import type { RequestItem, ComputeResult } from '../domain/models';
 import { FormPage } from '../page-objects/form-page';
 
 export interface PricingInterceptor {
@@ -33,16 +33,16 @@ export class ChromiumFormApp implements RequestFormApp {
     await this.form.goto(this.baseUrl);
   }
 
-  public async startNewTicket(): Promise<void> {
+  public async startNewRequest(): Promise<void> {
     await this.form.startNewRequest();
   }
 
-  public async addOptionLeg(leg: OptionLeg): Promise<void> {
+  public async addItem(item: RequestItem): Promise<void> {
     const index = await this.form.items.addItem();
-    await this.form.items.fillItem(index, leg);
+    await this.form.items.fillItem(index, item);
   }
 
-  public async price(): Promise<PricingResult> {
+  public async compute(): Promise<ComputeResult> {
     await this.form.clickCompute();
 
     await this.page.waitForFunction(() => {

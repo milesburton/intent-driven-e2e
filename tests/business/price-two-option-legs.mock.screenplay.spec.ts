@@ -1,21 +1,21 @@
 import { expect, test } from 'vitest';
 import { MockFormApp } from '../app/mock-form-app';
-import { itemA, itemB } from '../fixtures/legs';
+import { itemA, itemB } from '../fixtures/items';
 import { Actor } from '../screenplay/core';
-import { StartNewTicket, AddOptionLeg, Price } from '../screenplay/tasks';
-import { PricingStatus, PricingPV } from '../screenplay/questions';
+import { StartNewRequest, AddItem, Compute } from '../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../screenplay/questions';
 
-test('price two option legs (Screenplay, mock adapter)', async () => {
+test('compute two items (Screenplay, mock adapter)', async () => {
   const app = new MockFormApp();
   const trader = new Actor('Trader', app);
 
   await trader.attemptsTo(
-    new StartNewTicket(),
-    new AddOptionLeg(itemA),
-    new AddOptionLeg(itemB),
-    new Price()
+    new StartNewRequest(),
+    new AddItem(itemA),
+    new AddItem(itemB),
+    new Compute()
   );
 
-  expect(await trader.asks(new PricingStatus())).toBe('PRICED');
-  expect(await trader.asks(new PricingPV())).toBeCloseTo(-5, 6);
+  expect(await trader.asks(new ResultStatus())).toBe('PRICED');
+  expect(await trader.asks(new ResultValue())).toBeCloseTo(-5, 6);
 });

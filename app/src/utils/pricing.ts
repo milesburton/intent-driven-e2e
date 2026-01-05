@@ -1,4 +1,4 @@
-import type { PricingResult } from '../types';
+import type { ComputeResult } from '../types';
 
 type JsonObject = Record<string, unknown>;
 
@@ -10,7 +10,7 @@ function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function parsePricingResult(payload: unknown): PricingResult {
+export function parsePricingResult(payload: unknown): ComputeResult {
   if (typeof payload !== 'object' || payload === null) {
     return { status: 'FAILED', error: 'Invalid response' };
   }
