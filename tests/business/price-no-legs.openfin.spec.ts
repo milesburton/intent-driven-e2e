@@ -1,8 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { OpenFinFormApp } from '../app/openfin-form-app';
 
-const isWindows = process.platform === 'win32';
-const enabled = isWindows && process.env.OPENFIN === '1';
+const enabled = process.env.OPENFIN === '1';
 
 (enabled ? describe : describe.skip)('OpenFin adapter', () => {
   test('compute with no items returns FAILED (openfin adapter)', async () => {

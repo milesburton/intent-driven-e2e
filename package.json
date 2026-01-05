@@ -9,6 +9,8 @@
     "build": "vite build app --config app/vite.config.ts",
     "preview": "vite preview app --config app/vite.config.ts --host 0.0.0.0 --port 6000 --strictPort",
     "manifest:serve": "pnpm dlx http-server -p 6002 .",
+    "test:e2e:chromium": "vitest run \"tests/business/*.chromium*.spec.ts\"",
+    "test:e2e:openfin": "OPENFIN=1 vitest run \"tests/business/*.openfin.spec.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

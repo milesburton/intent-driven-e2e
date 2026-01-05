@@ -20,112 +20,76 @@ We achieve this by introducing a **typed domain interface** that represents the 
 
 ## Architecture
 
-```
+````
 Tests (express business intent)
    ↓
 Typed Domain Interface (RequestFormApp)
    ↓
-Driver (Playwright implementation)
-   ↓
-Page Objects (selectors, waits, retries)
-```
-
-Only the driver layer knows Playwright exists.
-
-## The application under test
-
-A minimal request UI is included under `app/` (Vite + TypeScript). It models:
-
-- Creating a new request
-- Adding items (side/kind/value fields)
-- Computing a result via an external POST request:
-  - `http://service.local/compute`
-
-The compute endpoint is intentionally fake. Tests intercept the POST request and provide a controlled response.
-
-## Test example
-
-Tests depend on the domain interface:
-
-```ts
-export interface RequestFormApp
-```
-
-A test reads like intent:
-await app.addItem(itemB);
-const result = await app.compute();
-
-````
-
-### Page Object Driver
-
-- **Pros:** Simple mental model; direct mapping from intent to driver actions.
-- **Example:** [Chromium spec](tests/business/price-two-option-legs.chromium.spec.ts) and [Mock spec](tests/business/price-two-option-legs.mock.spec.ts).
-
-### Screenplay Pattern
-
-- **What:** An `Actor` performs `Tasks` and answers `Questions` using the same `RequestFormApp`.
-This repo demonstrates two complementary styles that both preserve business intent and hide UI specifics behind the `RequestFormApp` interface.
-- **How:** Compose tasks like `StartNewRequest`, `AddItem`, `Compute`; query results via `ResultStatus`, `ResultValue`.
-- **Pros:** Encourages reusability and a richer vocabulary of intent; easy to extend with abilities and memory.
-- **Example:** [Chromium screenplay spec](tests/business/price-two-option-legs.chromium.screenplay.spec.ts) and [Mock screenplay spec](tests/business/price-two-option-legs.mock.screenplay.spec.ts).
-
-### Comparison
-
-- Both styles isolate UI details via `RequestFormApp` and keep tests at the business level.
-- Page Object Driver suits small to medium suites; Screenplay scales better when you want reusable, composable tasks.
-- You can mix both approaches in one repo; choose based on team preference and test complexity.
-
-### Headed vs headless execution
-
-- Headless mode works inside the Dev Container by default.
-- Headed mode does not, unless:
-  - You are running on macOS and executing on the host machine, or
-  - You provide an X server on the host and forward X11.
-
-If you need headed mode, run Playwright on the host machine.
-
-The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
-
 ## OpenFin (optional)
 
-You can run the same domain-level tests against an OpenFin-hosted runtime on Windows using Playwright over CDP.
+ELIF5: From the dev container + Windows host
 
-- Included files:
-  - `openfin.app.json` (manifest pointing at `http://127.0.0.1:6000` and enabling `--remote-debugging-port=9222`).
-  - `tests/app/openfin-form-app.ts` (adapter using `chromium.connectOverCDP`).
-  - `tests/business/*.openfin.spec.ts` (skipped unless `OPENFIN=1` on Windows).
+1. In the dev container, serve the app and manifest:
 
-Steps (Windows host):
-
-1. Build and serve the app (preview on port 6000):
-
-   ```powershell
-   pnpm install
-   pnpm build
-   pnpm preview
+   ```bash
+   pnpm preview        # app on 6000
+   pnpm manifest:serve # manifest on 6002
 ````
 
-2. Launch OpenFin (separate terminal). You have two options for the manifest:
-   - Option A — Local file (repo on host): run from the repo folder on Windows host.
+2. On the Windows host, launch OpenFin with the manifest URL:
 
    ```powershell
-   npx openfin-cli@latest --launch --manifest-file openfin.app.json
+   npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
    ```
 
-   - Option B — Manifest URL (no repo on host): serve the manifest from the container (on port 6002), then launch with URL.
+3. Back in the dev container, run the OpenFin tests:
 
-     In the dev container:
+   ```bash
+   pnpm test:e2e:openfin
+   ```
 
-     ```bash
-     pnpm manifest:serve
-     ```
+Notes:
 
-     On the Windows host:
+- The OpenFin adapter connects over CDP. In the dev container it defaults to `http://host.docker.internal:9222`; on Windows it defaults to `http://localhost:9222`.
+- If needed, override CDP explicitly:
 
-     ```powershell
-     npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
-     ```
+  ```bash
+  export OPENFIN_CDP_URL=http://<windows-host-ip>:9222
+  ```
+
+## Playwright (Chromium) tests
+
+ELIF5: Run from the dev container
+
+```bash
+pnpm test:e2e:chromium
+```
+
+Or run the full suite:
+
+```bash
+pnpm test
+```
+
+- Option A — Local file (repo on host): run from the repo folder on Windows host.
+
+```powershell
+npx openfin-cli@latest --launch --manifest-file openfin.app.json
+```
+
+- Option B — Manifest URL (no repo on host): serve the manifest from the container (on port 6002), then launch with URL.
+
+  In the dev container:
+
+  ```bash
+  pnpm manifest:serve
+  ```
+
+  On the Windows host:
+
+  ```powershell
+  npx openfin-cli@latest --launch --manifest-url http://localhost:6002/openfin.app.json
+  ```
 
 3. Run OpenFin tests:
 
