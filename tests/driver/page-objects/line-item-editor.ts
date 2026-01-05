@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { RequestItem } from '../domain/models';
+import type { RequestItem } from '../../domain/models';
 
 export class LineItemEditor {
   public constructor(private readonly page: Page) {}
@@ -7,11 +7,9 @@ export class LineItemEditor {
   public async addItem(): Promise<number> {
     const before = await this.page.locator('[data-testid="items-body"] tr').count();
     await this.page.locator('[data-testid="add-item"]').click();
-    const after = await this.page.locator('[data-testid="items-body"] tr').count();
-    if (after !== before + 1) {
-      throw new Error(`Expected item count to increment. Before=${before} After=${after}`);
-    }
-    return after - 1;
+    const newIndex = before; // next row index
+    await this.page.locator(`[data-testid="item-row-${newIndex}"]`).waitFor();
+    return newIndex;
   }
 
   public async fillItem(index: number, item: RequestItem): Promise<void> {

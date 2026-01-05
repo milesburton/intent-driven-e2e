@@ -23,7 +23,6 @@ if [[ -z "${WS_URL:-}" ]]; then
 fi
 
 echo "[pre-commit][openfin] detected DevTools endpoint: $WS_URL"
-export OPENFIN=1
 if [[ "$WS_URL" == ws://* || "$WS_URL" == wss://* ]]; then
   export OPENFIN_CDP_URL="$WS_URL"
 else
@@ -31,5 +30,5 @@ else
   exit 0
 fi
 
-# Run only the OpenFin specs to keep hook fast
-pnpm -s vitest run --dir tests tests/openfin/business/*.spec.ts
+# Run business tests with OpenFin adapter
+APP_ADAPTER=openfin pnpm -s vitest run --dir tests tests/driver/business/*.spec.ts tests/screenplay/business/*.spec.ts

@@ -1,8 +1,14 @@
-import type { Browser, Page } from 'playwright';
+import type { Browser, Page, Route, Request } from 'playwright';
 import { chromium } from 'playwright';
 import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
 import type { RequestItem, ComputeResult } from '../shared/domain/models';
-import { FormPage } from '../page-objects/form-page';
+import { FormPage } from '../driver/page-objects/form-page';
+
+export interface PricingInterceptor {
+  expectedUrl: string;
+  onRequest?: (payload: unknown) => void;
+  response: { status: 'PRICED' | 'FAILED'; pv?: number; error?: string };
+}
 
 export class OpenFinFormApp implements RequestFormApp {
   private readonly cdpUrl: string;
@@ -12,7 +18,8 @@ export class OpenFinFormApp implements RequestFormApp {
 
   public constructor(
     private readonly baseUrl: string,
-    cdpUrl?: string
+    cdpUrl?: string,
+    private readonly pricingInterceptor?: PricingInterceptor
   ) {
     const defaultCdpUrl =
       process.platform === 'linux' ? 'http://host.docker.internal:9222' : 'http://localhost:9222';
@@ -32,11 +39,16 @@ export class OpenFinFormApp implements RequestFormApp {
       const defaultContext = browser.contexts()[0];
       if (!defaultContext) throw new Error('No browser context available in OpenFin connection');
       page = await defaultContext.newPage();
-      await page.goto(this.baseUrl, { waitUntil: 'domcontentloaded' });
+      // Removed the goto call to avoid double navigation
     }
 
     this.page = page ?? null;
     this.form = new FormPage(page!);
+
+    // If an interceptor is provided, install it before navigation
+    if (this.pricingInterceptor) {
+      await this.installPricingInterceptor();
+    }
     await this.form.goto(this.baseUrl);
   }
 
@@ -109,5 +121,32 @@ export class OpenFinFormApp implements RequestFormApp {
       );
     }
     return cdpUrl;
+  }
+
+  private async installPricingInterceptor(): Promise<void> {
+    if (!this.page || !this.pricingInterceptor) return;
+    const expected = this.pricingInterceptor.expectedUrl;
+    await this.page.route(expected, async (route: Route, request: Request) => {
+      if (request.method() !== 'POST') {
+        await route.fallback();
+        return;
+      }
+
+      const postData = request.postData() ?? '';
+      let payload: unknown;
+      try {
+        payload = JSON.parse(postData);
+      } catch {
+        payload = { parseError: true };
+      }
+
+      this.pricingInterceptor!.onRequest?.(payload);
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(this.pricingInterceptor!.response)
+      });
+    });
   }
 }
