@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest';
-import { describeOpenFin } from '../fixtures/openfin';
+import { describeOpenFin } from '../helpers/openfin';
 
-describeOpenFin('Desktop Adapter (OpenFin)', ({ getApp, STATUS }) => {
+describeOpenFin('Request Form – OpenFin Driver', ({ getApp, STATUS }) => {
   test('compute with no items returns FAILED', async () => {
     const app = getApp();
     await app.startNewRequest();
