@@ -36,13 +36,25 @@ ELIF5: From the dev container + Windows host (Git Bash only)
    pnpm manifest:serve   # manifest on 6002
    ```
 
-2. On the Windows host, launch OpenFin with the manifest URL:
+2. On the Windows host, launch OpenFin with the manifest URL (Git Bash):
 
    ```bash
-   # Git Bash: download, unzip, and launch OpenFin RVM with the manifest URL
-   curl -sL -o "$TEMP/OpenFinRVM.zip" https://cdn.openfin.co/release/rvm/latest && \
-   unzip -oq "$TEMP/OpenFinRVM.zip" -d "$TEMP/openfin_rvm" && \
+   # Install OpenFin if not already installed
+   if [ ! -f "$LOCALAPPDATA/OpenFin/OpenFinRVM.exe" ]; then
+     curl -sL -o "$TEMP/OpenFinRVM.zip" https://cdn.openfin.co/release/rvm/latest && \
+     unzip -oq "$TEMP/OpenFinRVM.zip" -d "$TEMP/openfin_rvm"
+   fi
+
+   # Clear cache and launch
+   rm -rf "$LOCALAPPDATA/OpenFin/apps" "$LOCALAPPDATA/OpenFin/cache"
+   "${LOCALAPPDATA}/OpenFin/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json" 2>/dev/null || \
    "$TEMP/openfin_rvm/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json"
+   ```
+
+   Or run the repo script from Git Bash:
+
+   ```bash
+   bash scripts/openfin-launch.sh
    ```
 
 3. Back in the dev container, run the OpenFin tests:
