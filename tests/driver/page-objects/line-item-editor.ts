@@ -7,13 +7,12 @@ export class LineItemEditor {
   public async addItem(): Promise<number> {
     const before = await this.page.locator('[data-testid="items-body"] tr').count();
     await this.page.locator('[data-testid="add-item"]').click();
-    const newIndex = before; // next row index
+    const newIndex = before;
     await this.page.locator(`[data-testid="item-row-${newIndex}"]`).waitFor();
     return newIndex;
   }
 
   public async fillItem(index: number, item: RequestItem): Promise<void> {
-    // Map item values to whichever option set is present (neutral IN/OUT,A/B or legacy BUY/SELL,CALL/PUT)
     const sideSelect = this.page.locator(`[data-testid="item-side-${index}"]`);
     const sideOptions = await sideSelect.locator('option').allTextContents();
     const sideValue = sideOptions.includes(item.side)

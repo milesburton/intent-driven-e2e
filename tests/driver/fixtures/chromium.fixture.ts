@@ -2,7 +2,8 @@ import { chromium, type Browser, type Page } from 'playwright';
 import { beforeAll, afterAll } from 'vitest';
 import type { RunningServer } from './server';
 import { startViteAppServer } from './server';
-import { ChromiumFormApp, type PricingInterceptor } from '../../app/chromium-form-app';
+import { ChromiumFormApp } from '../../app/chromium-form-app';
+import type { PricingInterceptor } from '../../shared/interfaces/pricing-interceptor';
 import type { RequestFormApp } from '../../shared/domain/request-form-app.interface';
 
 export interface ChromiumFixture {

@@ -100,45 +100,81 @@ If you need headed mode, run Playwright on the host machine.
 
 The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
 
-## Playwright (Chromium) tests
+## Tests and environments
 
-ELI5: Run from the dev container
+Tests are written against a single domain interface and run identically across environments. Choose the environment via `APP_ADAPTER`.
+
+- `chromium` (default): launches a local dev server and runs Playwright Chromium.
+- `openfin`: connects over CDP to an existing OpenFin runtime and page.
+- `mock`: runs against a pure in-memory implementation (no browser).
+
+### Quick start
+
+- Chromium business suites:
 
 ```bash
 pnpm test:e2e:chromium
 ```
 
-Or run the full suite:
-
-```bash
-pnpm test
-```
-
-## OpenFin (optional)
-
-OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
-
-### Running the end-to-end tests using OpenFin
-
-**Step 1.** In the dev container, serve the app and manifest:
-
-```bash
-pnpm preview
-pnpm manifest:serve
-```
-
-**Step 2.** Download and run the script directly from the dev container (manifest server on 6002):
-
-```bash
-curl -sL http://127.0.0.1:6002/scripts/openfin-launch.sh | bash
-```
-
-**Step 3.** Back in the dev container, run the OpenFin tests:
+- OpenFin business suites (see OpenFin section below first):
 
 ```bash
 pnpm test:e2e:openfin
 ```
 
+- Full suite (unit + business on Chromium):
+
+```bash
+pnpm test
+```
+
+## OpenFin (manual)
+
+OpenFin is not supported inside the Linux dev container; run OpenFin on a supported host (e.g., Windows). Tests connect to OpenFin via the Chrome DevTools Protocol (CDP).
+
+### Setup
+
+1. Serve the app (inside the dev container or host):
+
+```bash
+pnpm preview
+```
+
+2. Launch OpenFin with remote debugging enabled (e.g., `--remote-debugging-port=9222`) and open the app URL you’re serving (e.g., http://127.0.0.1:5500).
+
+3. Run the tests from the dev container. The script will auto-detect `OPENFIN_CDP_URL` and set `APP_ADAPTER=openfin`:
+
+```bash
+pnpm test:e2e:openfin
+```
+
+You can also run manually:
+
+```bash
+APP_ADAPTER=openfin APP_BASE_URL=http://127.0.0.1:5500 OPENFIN_CDP_URL=ws://<host>:9222/devtools/browser/<id> pnpm vitest run tests/driver/business/*.spec.ts tests/screenplay/business/*.spec.ts
+```
+
 ## CI (GitHub Actions)
 
 The workflow installs dependencies, installs Chromium for Playwright, and runs Vitest.
+
+## Project layout
+
+- Business tests (pattern-first):
+  - Driver: [tests/driver/business](tests/driver/business)
+  - Screenplay: [tests/screenplay/business](tests/screenplay/business)
+- Adapters and fixtures:
+  - Chromium adapter: [tests/app/chromium-form-app.ts](tests/app/chromium-form-app.ts)
+  - OpenFin adapter: [tests/app/openfin-form-app.ts](tests/app/openfin-form-app.ts)
+  - Unified fixture: [tests/helpers/appFixture.ts](tests/helpers/appFixture.ts)
+  - Page objects: [tests/driver/page-objects](tests/driver/page-objects)
+- Shared domain types and constants: [app/src/types.ts](app/src/types.ts)
+
+## Network interception
+
+Tests exercise the full user flow and intercept the UI’s POST to `http://service.local/compute` via a shared interface:
+
+- Chromium: wired in [installPricingInterceptor()](tests/app/chromium-form-app.ts#L57)
+- OpenFin: wired in [installPricingInterceptor()](tests/app/openfin-form-app.ts#L93-L121)
+
+Provide `expectedUrl`, `response`, and optional `onRequest(payload)` to the unified fixture. The same interceptor config is used across environments.

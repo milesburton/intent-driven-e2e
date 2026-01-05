@@ -5,7 +5,7 @@ export interface RequestItem {
   side: Direction;
   type: Kind;
   strike: number;
-  expiry: string; // YYYY-MM-DD
+  expiry: string;
   quantity: number;
 }
 
@@ -15,7 +15,6 @@ export interface ComputeResult {
   error?: string;
 }
 
-// Shared status constants for use across app and tests
 export const STATUS = {
   IDLE: 'IDLE' as const,
   PRICING: 'PRICING' as const,
@@ -23,7 +22,6 @@ export const STATUS = {
   FAILED: 'FAILED' as const
 };
 
-// Shared error message constants for use across app and tests
 export const ERRORS = {
   NO_ITEMS: 'No items' as const,
   INVALID_RESPONSE: 'Invalid response' as const,

@@ -5,7 +5,7 @@ export interface RequestItem {
   side: Direction;
   type: Kind;
   strike: number;
-  expiry: string; // YYYY-MM-DD
+  expiry: string;
   quantity: number;
 }
 
@@ -16,3 +16,6 @@ export interface ComputeResult {
   pv?: number;
   error?: string;
 }
+
+export const STATUS_PRICED = 'PRICED' as const;
+export const STATUS_FAILED = 'FAILED' as const;

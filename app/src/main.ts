@@ -2,8 +2,6 @@ import './styles.css';
 import type { RequestItem, ComputeResult, Direction, Kind } from './types';
 import { ERRORS, STATUS } from './types';
 import { parseComputeResult } from './utils/compute';
-
-// Guard build hash for dev server where it's not defined
 const buildEnv = globalThis as unknown as { __BUILD_HASH__?: string };
 const buildHash: string = buildEnv.__BUILD_HASH__ ?? 'dev';
 window.console.log('[app] build:', buildHash);

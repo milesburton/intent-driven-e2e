@@ -1,21 +1,9 @@
 import type { Page, Route, Request } from 'playwright';
 import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
 import type { RequestItem, ComputeResult } from '../shared/domain/models';
+import type { PricingInterceptor } from '../shared/interfaces/pricing-interceptor';
 import { FormPage } from '../driver/page-objects/form-page';
-
-export interface PricingInterceptor {
-  expectedUrl: string;
-  onRequest?: (payload: unknown) => void;
-  response: { status: 'PRICED' | 'FAILED'; pv?: number; error?: string };
-}
-
-function safeJsonParse(text: string): unknown {
-  try {
-    return JSON.parse(text) as unknown;
-  } catch {
-    return { parseError: true };
-  }
-}
+import { safeJsonParse } from '../shared/helpers/utils';
 
 export class ChromiumFormApp implements RequestFormApp {
   private readonly form: FormPage;

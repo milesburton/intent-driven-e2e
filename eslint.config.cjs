@@ -29,7 +29,6 @@ module.exports = [
       import: importPlugin
     },
     rules: {
-      // Use TypeScript-aware rules instead of base ones
       ...js.configs.recommended.rules,
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
@@ -51,7 +50,6 @@ module.exports = [
   {
     files: ['tests/**/*.ts', 'tests/**/*.tsx'],
     rules: {
-      // Relax strict rules for test support files
       '@typescript-eslint/require-await': 'off'
     }
   },

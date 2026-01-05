@@ -2,13 +2,9 @@ import type { Browser, Page, Route, Request } from 'playwright';
 import { chromium } from 'playwright';
 import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
 import type { RequestItem, ComputeResult } from '../shared/domain/models';
+import type { PricingInterceptor } from '../shared/interfaces/pricing-interceptor';
 import { FormPage } from '../driver/page-objects/form-page';
-
-export interface PricingInterceptor {
-  expectedUrl: string;
-  onRequest?: (payload: unknown) => void;
-  response: { status: 'PRICED' | 'FAILED'; pv?: number; error?: string };
-}
+import { safeJsonParse } from '../shared/helpers/utils';
 
 export class OpenFinFormApp implements RequestFormApp {
   private readonly cdpUrl: string;
@@ -31,7 +27,6 @@ export class OpenFinFormApp implements RequestFormApp {
     const browser = await chromium.connectOverCDP(resolvedUrl);
     this.browser = browser;
 
-    // Find a page that matches our baseUrl; otherwise open a new one.
     const allPages = browser.contexts().flatMap((c) => c.pages());
     let page: Page | undefined = allPages.find((p) => p.url().startsWith(this.baseUrl));
 
@@ -39,13 +34,11 @@ export class OpenFinFormApp implements RequestFormApp {
       const defaultContext = browser.contexts()[0];
       if (!defaultContext) throw new Error('No browser context available in OpenFin connection');
       page = await defaultContext.newPage();
-      // Removed the goto call to avoid double navigation
     }
 
     this.page = page ?? null;
     this.form = new FormPage(page!);
 
-    // If an interceptor is provided, install it before navigation
     if (this.pricingInterceptor) {
       await this.installPricingInterceptor();
     }
@@ -53,18 +46,18 @@ export class OpenFinFormApp implements RequestFormApp {
   }
 
   public async startNewRequest(): Promise<void> {
-    if (!this.form) throw new Error('Not initialized');
+    if (!this.form) throw new Error('Not initialised');
     await this.form.startNewRequest();
   }
 
   public async addItem(item: RequestItem): Promise<void> {
-    if (!this.form) throw new Error('Not initialized');
+    if (!this.form) throw new Error('Not initialised');
     const index = await this.form.items.addItem();
     await this.form.items.fillItem(index, item);
   }
 
   public async compute(): Promise<ComputeResult> {
-    if (!this.form) throw new Error('Not initialized');
+    if (!this.form) throw new Error('Not initialised');
     await this.form.clickCompute();
     return await this.form.results.waitForResult();
   }
@@ -77,12 +70,10 @@ export class OpenFinFormApp implements RequestFormApp {
   }
 
   private async resolveCdpUrl(cdpUrl: string): Promise<string> {
-    // If user provided a websocket URL, use as-is
     if (cdpUrl.startsWith('ws://') || cdpUrl.startsWith('wss://')) {
       return cdpUrl;
     }
 
-    // Try to read websocket debugger URL from DevTools JSON endpoint
     const tryEndpoints = ['json/version', 'json', 'json/list'];
     for (const ep of tryEndpoints) {
       try {
@@ -102,12 +93,10 @@ export class OpenFinFormApp implements RequestFormApp {
           return body[0].webSocketDebuggerUrl as string;
         }
       } catch {
-        // ignore and try next endpoint
+        continue;
       }
     }
 
-    // As a last resort, return original URL and let Playwright handle/throw
-    // Augment error with guidance by doing a lightweight GET to signal reachability
     try {
       const res = await fetch(cdpUrl, { method: 'GET' });
       if (!res.ok) {
@@ -117,7 +106,7 @@ export class OpenFinFormApp implements RequestFormApp {
       }
     } catch {
       throw new Error(
-        `Cannot reach OpenFin DevTools at ${cdpUrl}. Ensure runtime args include --remote-debugging-port=9222 and consider ws:// URL via OPENFIN_CDP_URL.`
+        `Cannot reach OpenFin DevTools at ${cdpUrl}. Ensure runtime arguments include --remote-debugging-port=9222 and consider ws:// URL via OPENFIN_CDP_URL.`
       );
     }
     return cdpUrl;
@@ -133,12 +122,7 @@ export class OpenFinFormApp implements RequestFormApp {
       }
 
       const postData = request.postData() ?? '';
-      let payload: unknown;
-      try {
-        payload = JSON.parse(postData);
-      } catch {
-        payload = { parseError: true };
-      }
+      const payload: unknown = safeJsonParse(postData);
 
       this.pricingInterceptor!.onRequest?.(payload);
 
