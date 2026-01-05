@@ -10,7 +10,7 @@ function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function parsePricingResult(payload: unknown): ComputeResult {
+export function parseComputeResult(payload: unknown): ComputeResult {
   if (typeof payload !== 'object' || payload === null) {
     return { status: 'FAILED', error: 'Invalid response' };
   }

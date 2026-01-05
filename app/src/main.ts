@@ -1,6 +1,6 @@
 import './styles.css';
 import type { RequestItem, ComputeResult, Direction, Kind } from './types';
-import { parsePricingResult } from './utils/pricing';
+import { parseComputeResult } from './utils/compute';
 
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -191,7 +191,7 @@ function createApp(root: HTMLElement): void {
       });
 
       const data: unknown = await response.json();
-      state.result = parsePricingResult(data);
+      state.result = parseComputeResult(data);
       renderResults();
     } catch (e: unknown) {
       state.result = {
