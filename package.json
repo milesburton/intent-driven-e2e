@@ -8,6 +8,7 @@
     "dev": "vite --config app/vite.config.ts --root app",
     "build": "vite build --config app/vite.config.ts --root app",
     "preview": "vite preview --config app/vite.config.ts --root app --host 0.0.0.0 --port 6000",
+    "manifest:serve": "pnpm dlx http-server -p 6001 .",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

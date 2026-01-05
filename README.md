@@ -106,11 +106,26 @@ Steps (Windows host):
    pnpm preview
 ````
 
-2. Launch OpenFin (separate terminal):
+2. Launch OpenFin (separate terminal). You have two options for the manifest:
+   - Option A — Local file (repo on host): run from the repo folder on Windows host.
 
    ```powershell
    npx openfin-cli@latest --launch --manifest-file openfin.app.json
    ```
+
+   - Option B — Manifest URL (no repo on host): serve the manifest from the container, then launch with URL.
+
+     In the dev container:
+
+     ```bash
+     pnpm manifest:serve
+     ```
+
+     On the Windows host:
+
+     ```powershell
+     npx openfin-cli@latest --launch --manifest-url http://localhost:6001/openfin.app.json
+     ```
 
 3. Run OpenFin tests:
 
