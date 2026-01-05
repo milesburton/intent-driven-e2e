@@ -2,25 +2,25 @@ import { chromium, type Browser, type Page } from 'playwright';
 import { beforeAll, afterAll } from 'vitest';
 import type { RunningServer } from './server';
 import { startViteAppServer } from './server';
-import { ChromiumTradeTicketApp, type PricingInterceptor } from '../app/chromium-trade-ticket-app';
-import type { TradeTicketApp } from '../domain/trade-ticket-app.interface';
+import { ChromiumFormApp, type PricingInterceptor } from '../app/chromium-form-app';
+import type { RequestFormApp } from '../domain/request-form-app.interface';
 
 export interface ChromiumFixture {
-  readonly app: TradeTicketApp;
+  readonly app: RequestFormApp;
 }
 
 export function createChromiumFixture(interceptor: PricingInterceptor): ChromiumFixture {
   let browser: Browser | null = null;
   let page: Page | null = null;
   let server: RunningServer | null = null;
-  let app: ChromiumTradeTicketApp | null = null;
+  let app: ChromiumFormApp | null = null;
 
   beforeAll(async () => {
     server = await startViteAppServer();
     browser = await chromium.launch({ headless: true });
     page = await browser.newPage();
 
-    app = new ChromiumTradeTicketApp(page, server.baseUrl, interceptor);
+    app = new ChromiumFormApp(page, server.baseUrl, interceptor);
     await app.init();
   });
 
@@ -31,7 +31,7 @@ export function createChromiumFixture(interceptor: PricingInterceptor): Chromium
   });
 
   return {
-    get app(): TradeTicketApp {
+    get app(): RequestFormApp {
       if (!app) throw new Error('Chromium fixture not initialised');
       return app;
     }

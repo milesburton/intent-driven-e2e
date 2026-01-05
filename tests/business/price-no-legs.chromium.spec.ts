@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
 
 const fixture = createChromiumFixture({
-  expectedUrl: 'http://pricing.acmibank/price',
+  expectedUrl: 'http://service.local/compute',
   response: { status: 'PRICED', pv: 999 } // Irrelevant, no request is sent without legs
 });
 

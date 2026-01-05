@@ -1,11 +1,11 @@
 import { expect, test } from 'vitest';
-import { MockTradeTicketApp } from '../app/mock-trade-ticket-app';
+import { MockFormApp } from '../app/mock-form-app';
 import { Actor } from '../screenplay/core';
 import { StartNewTicket, Price } from '../screenplay/tasks';
 import { PricingStatus, PricingPV } from '../screenplay/questions';
 
 test('price with no legs returns FAILED (Screenplay, mock adapter)', async () => {
-  const app = new MockTradeTicketApp();
+  const app = new MockFormApp();
   const trader = new Actor('Trader', app);
   await trader.attemptsTo(new StartNewTicket(), new Price());
 

@@ -1,6 +1,6 @@
 import type { OptionLeg } from '../domain/models';
 
-export const buyCall: OptionLeg = {
+export const itemA: OptionLeg = {
   side: 'BUY',
   type: 'CALL',
   strike: 100,
@@ -8,7 +8,7 @@ export const buyCall: OptionLeg = {
   quantity: 1
 };
 
-export const sellCall: OptionLeg = {
+export const itemB: OptionLeg = {
   side: 'SELL',
   type: 'CALL',
   strike: 105,

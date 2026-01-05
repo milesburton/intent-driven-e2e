@@ -1,18 +1,18 @@
 import { expect, test } from 'vitest';
-import { MockTradeTicketApp } from '../app/mock-trade-ticket-app';
-import { buyCall, sellCall } from '../fixtures/legs';
+import { MockFormApp } from '../app/mock-form-app';
+import { itemA, itemB } from '../fixtures/legs';
 import { Actor } from '../screenplay/core';
 import { StartNewTicket, AddOptionLeg, Price } from '../screenplay/tasks';
 import { PricingStatus, PricingPV } from '../screenplay/questions';
 
 test('price two option legs (Screenplay, mock adapter)', async () => {
-  const app = new MockTradeTicketApp();
+  const app = new MockFormApp();
   const trader = new Actor('Trader', app);
 
   await trader.attemptsTo(
     new StartNewTicket(),
-    new AddOptionLeg(buyCall),
-    new AddOptionLeg(sellCall),
+    new AddOptionLeg(itemA),
+    new AddOptionLeg(itemB),
     new Price()
   );
 

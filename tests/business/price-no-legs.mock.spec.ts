@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { MockTradeTicketApp } from '../app/mock-trade-ticket-app';
+import { MockFormApp } from '../app/mock-form-app';
 
 test('price with no legs returns FAILED (mock adapter)', async () => {
-  const app = new MockTradeTicketApp();
+  const app = new MockFormApp();
   await app.startNewTicket();
   const result = await app.price();
 

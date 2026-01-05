@@ -1,13 +1,13 @@
 import { expect, test } from 'vitest';
-import { MockTradeTicketApp } from '../app/mock-trade-ticket-app';
-import { buyCall, sellCall } from '../fixtures/legs';
+import { MockFormApp } from '../app/mock-form-app';
+import { itemA, itemB } from '../fixtures/legs';
 
 test('price two option legs (mock adapter)', async () => {
-  const app = new MockTradeTicketApp();
+  const app = new MockFormApp();
 
   await app.startNewTicket();
-  await app.addOptionLeg(buyCall);
-  await app.addOptionLeg(sellCall);
+  await app.addOptionLeg(itemA);
+  await app.addOptionLeg(itemB);
 
   const result = await app.price();
 

@@ -5,7 +5,7 @@ import { StartNewTicket, Price } from '../screenplay/tasks';
 import { PricingStatus, PricingPV } from '../screenplay/questions';
 
 const fixture = createChromiumFixture({
-  expectedUrl: 'http://pricing.acmibank/price',
+  expectedUrl: 'http://service.local/compute',
   response: { status: 'PRICED', pv: 999 }
 });
 

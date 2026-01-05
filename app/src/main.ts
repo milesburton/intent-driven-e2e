@@ -186,7 +186,7 @@ function createApp(root: HTMLElement): void {
     renderResults();
 
     try {
-      const response = await fetch('http://pricing.acmibank/price', {
+      const response = await fetch('http://service.local/compute', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ legs: state.legs })
