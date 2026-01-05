@@ -38,11 +38,11 @@ ELIF5: From the dev container + Windows host (Git Bash only)
 
 2. On the Windows host, launch OpenFin with the manifest URL:
 
-   ```powershell
-   # Git Bash: use RVM for reliable launches
-   curl -L -o OpenFinRVM.zip https://cdn.openfin.co/release/rvm/latest
-   unzip OpenFinRVM.zip -d openfin_rvm
-   cmd //c "openfin_rvm\\OpenFinRVM.exe --config=http://127.0.0.1:6002/openfin.app.json"
+   ```bash
+   # Git Bash: download, unzip, and launch OpenFin RVM with the manifest URL
+   curl -sL -o "$TEMP/OpenFinRVM.zip" https://cdn.openfin.co/release/rvm/latest && \
+   unzip -oq "$TEMP/OpenFinRVM.zip" -d "$TEMP/openfin_rvm" && \
+   "$TEMP/openfin_rvm/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json"
    ```
 
 3. Back in the dev container, run the OpenFin tests:
