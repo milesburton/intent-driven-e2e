@@ -1,1 +1,4 @@
 pnpm exec lint-staged
+
+# Conditionally run OpenFin specs if an agent is available
+bash scripts/precommit-openfin.sh
