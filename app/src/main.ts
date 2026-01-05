@@ -129,7 +129,7 @@ function createApp(root: HTMLElement): void {
       sideSel.addEventListener('change', () => {
         const v = sideSel.value;
         if (v === 'BUY' || v === 'SELL') {
-          state.legs[idx] = { ...state.legs[idx], side: v satisfies Side };
+          leg.side = v as Side;
         }
       });
 
@@ -146,7 +146,7 @@ function createApp(root: HTMLElement): void {
       typeSel.addEventListener('change', () => {
         const v = typeSel.value;
         if (v === 'CALL' || v === 'PUT') {
-          state.legs[idx] = { ...state.legs[idx], type: v satisfies OptionType };
+          leg.type = v as OptionType;
         }
       });
 
@@ -155,14 +155,14 @@ function createApp(root: HTMLElement): void {
       strikeInput.addEventListener('input', () => {
         const n = Number(strikeInput.value);
         if (Number.isFinite(n)) {
-          state.legs[idx] = { ...state.legs[idx], strike: n };
+          leg.strike = n;
         }
       });
 
       const expiryInput = el('input', { type: 'date', 'data-testid': `leg-expiry-${idx}` });
       expiryInput.value = leg.expiry;
       expiryInput.addEventListener('input', () => {
-        state.legs[idx] = { ...state.legs[idx], expiry: expiryInput.value };
+        leg.expiry = expiryInput.value;
       });
 
       const qtyInput = el('input', { type: 'number', 'data-testid': `leg-qty-${idx}` });
@@ -170,7 +170,7 @@ function createApp(root: HTMLElement): void {
       qtyInput.addEventListener('input', () => {
         const n = Number(qtyInput.value);
         if (Number.isFinite(n)) {
-          state.legs[idx] = { ...state.legs[idx], quantity: n };
+          leg.quantity = n;
         }
       });
 

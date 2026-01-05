@@ -20,7 +20,8 @@ module.exports = [
       globals: {
         process: 'readonly',
         window: 'readonly',
-        document: 'readonly'
+        document: 'readonly',
+        fetch: 'readonly'
       }
     },
     plugins: {
