@@ -7,7 +7,6 @@ module.exports = [
   {
     ignores: ['app/dist/**', 'node_modules/**', 'eslint.config.cjs']
   },
-  // TypeScript files
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -35,12 +34,17 @@ module.exports = [
       'import/no-unresolved': 'off'
     }
   },
-  // JavaScript config and other JS files
   {
     files: ['**/*.js', '**/*.cjs'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'module'
+      sourceType: 'module',
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+        process: 'readonly'
+      }
     },
     plugins: {
       import: importPlugin

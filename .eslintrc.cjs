@@ -1,4 +1,3 @@
-/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
   ignorePatterns: ['app/dist/**', 'node_modules/**'],
