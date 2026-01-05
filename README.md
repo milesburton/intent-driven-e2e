@@ -51,10 +51,19 @@ ELIF5: From the dev container + Windows host (Git Bash only)
    "$TEMP/openfin_rvm/OpenFinRVM.exe" --config="http://127.0.0.1:6002/openfin.app.json"
    ```
 
-   Or run the repo script from Git Bash:
+   Or download and run the script directly from the dev container (manifest server on 6002):
+
+   One-liner (pipe to bash):
 
    ```bash
-   bash scripts/openfin-launch.sh
+   curl -sL http://127.0.0.1:6002/scripts/openfin-launch.sh | bash
+   ```
+
+   Safer alternative (save to TEMP then execute):
+
+   ```bash
+   curl -sL -o "$TEMP/openfin-launch.sh" http://127.0.0.1:6002/scripts/openfin-launch.sh
+   bash "$TEMP/openfin-launch.sh"
    ```
 
 3. Back in the dev container, run the OpenFin tests:
