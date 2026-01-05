@@ -5,4 +5,4 @@ set -e
 pnpm -s lint
 
 # Run fast tests: unit and mock-based business tests (no browsers)
-pnpm -s vitest run ./tests/unit/*.spec.ts ./tests/business/*.mock*.spec.ts
+pnpm -s vitest run ./tests/unit/*.spec.ts ./tests/business/*.inprocess*.spec.ts
