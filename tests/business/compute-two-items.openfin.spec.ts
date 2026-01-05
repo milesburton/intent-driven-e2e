@@ -1,22 +1,16 @@
-import { describe, test, expect } from 'vitest';
+import { test, expect } from 'vitest';
 import { items } from '../fixtures/items';
-import { OpenFinFormApp } from '../app/openfin-form-app';
+import { describeOpenFin } from '../fixtures/openfin';
 
-const enabled = process.env.OPENFIN === '1';
+// Suite-level OpenFin helper handles gating and setup/teardown
 
-(enabled ? describe : describe.skip)('OpenFin adapter', () => {
-  test('compute two items (openfin adapter)', async () => {
-    const baseUrl = 'http://127.0.0.1:5500';
-    const app = new OpenFinFormApp(baseUrl);
-    await app.init();
-
+describeOpenFin('Desktop Adapter (OpenFin)', ({ getApp, STATUS }) => {
+  test('compute two items', async () => {
+    const app = getApp();
     await app.startNewRequest();
     await app.addItem(items.itemA);
     await app.addItem(items.itemB);
     const result = await app.compute();
-
-    expect(result.status === 'PRICED' || result.status === 'FAILED').toBe(true);
-
-    await app.dispose();
+    expect([STATUS.PRICED, STATUS.FAILED]).toContain(result.status);
   });
 });

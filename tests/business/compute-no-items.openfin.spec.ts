@@ -1,20 +1,12 @@
-import { describe, test, expect } from 'vitest';
-import { OpenFinFormApp } from '../app/openfin-form-app';
+import { test, expect } from 'vitest';
+import { describeOpenFin } from '../fixtures/openfin';
 
-const enabled = process.env.OPENFIN === '1';
-
-(enabled ? describe : describe.skip)('OpenFin adapter', () => {
-  test('compute with no items returns FAILED (openfin adapter)', async () => {
-    const baseUrl = 'http://127.0.0.1:5500';
-    const app = new OpenFinFormApp(baseUrl);
-    await app.init();
-
+describeOpenFin('Desktop Adapter (OpenFin)', ({ getApp, STATUS }) => {
+  test('compute with no items returns FAILED', async () => {
+    const app = getApp();
     await app.startNewRequest();
     const result = await app.compute();
-
-    expect(result.status).toBe('FAILED');
+    expect(result.status).toBe(STATUS.FAILED);
     expect(result.error).toBeDefined();
-
-    await app.dispose();
   });
 });
