@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openfin.co/schemas/platform-v2.0.0.schema.json",
+  "platform": {
+    "uuid": "domain-driven-ui-testing-platform",
+    "autoShow": true,
+    "defaultWindowOptions": {
+      "defaultCentered": true,
+      "saveWindowState": false,
+      "width": 1200,
+      "height": 800
+    },
+    "providerUrl": "https://cdn.openfin.co/release/platform/16.0.0/stable/platformProvider.v2.json"
+  },
+  "runtime": {
+    "version": "stable",
+    "arguments": "--remote-debugging-port=9222"
+  },
+  "startupApp": {
+    "name": "DomainDrivenUITesting",
+    "uuid": "domain-driven-ui-testing-app",
+    "url": "http://127.0.0.1:6000",
+    "autoShow": true
+  }
+}

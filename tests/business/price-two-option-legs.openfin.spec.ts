@@ -1,0 +1,23 @@
+import { describe, test, expect } from 'vitest';
+import { items } from '../fixtures/items';
+import { OpenFinFormApp } from '../app/openfin-form-app';
+
+const isWindows = process.platform === 'win32';
+const enabled = isWindows && process.env.OPENFIN === '1';
+
+(enabled ? describe : describe.skip)('OpenFin adapter', () => {
+  test('compute two items (openfin adapter)', async () => {
+    const baseUrl = 'http://127.0.0.1:6000';
+    const app = new OpenFinFormApp(baseUrl);
+    await app.init();
+
+    await app.startNewRequest();
+    await app.addItem(items.itemA);
+    await app.addItem(items.itemB);
+    const result = await app.compute();
+
+    expect(result.status === 'PRICED' || result.status === 'FAILED').toBe(true);
+
+    await app.dispose();
+  });
+});

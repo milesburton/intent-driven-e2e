@@ -54,7 +54,7 @@ A test reads like intent:
 await app.addItem(itemB);
 const result = await app.compute();
 
-```
+````
 
 ### Page Object Driver
 
@@ -85,4 +85,44 @@ This repo demonstrates two complementary styles that both preserve business inte
 If you need headed mode, run Playwright on the host machine.
 
 The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
+
+## OpenFin (optional)
+
+You can run the same domain-level tests against an OpenFin-hosted runtime on Windows using Playwright over CDP.
+
+- Included files:
+  - `openfin.app.json` (manifest pointing at `http://127.0.0.1:6000` and enabling `--remote-debugging-port=9222`).
+  - `tests/app/openfin-form-app.ts` (adapter using `chromium.connectOverCDP`).
+  - `tests/business/*.openfin.spec.ts` (skipped unless `OPENFIN=1` on Windows).
+
+Steps (Windows host):
+
+1. Build and serve the app:
+
+   ```powershell
+   pnpm install
+   pnpm build
+   pnpm preview
+````
+
+2. Launch OpenFin (separate terminal):
+
+   ```powershell
+   npx openfin-cli@latest --launch --manifest-file openfin.app.json
+   ```
+
+3. Run OpenFin tests:
+
+   ```powershell
+   $env:OPENFIN = "1"
+   pnpm vitest run tests/business/*.openfin.spec.ts
+   ```
+
+Notes:
+
+- OpenFin is not supported inside the Linux dev container; use a Windows machine or CI runner.
+- A dedicated Windows workflow can be added to run these tests on `windows-latest`.
+
+```
+
 ```

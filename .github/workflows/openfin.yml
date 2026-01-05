@@ -1,0 +1,45 @@
+name: OpenFin (manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  openfin-tests:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Start preview server
+        shell: pwsh
+        run: |
+          Start-Process -FilePath pnpm -ArgumentList "preview" -WindowStyle Hidden
+          Start-Sleep -Seconds 5
+
+      - name: Launch OpenFin
+        shell: pwsh
+        run: |
+          npx openfin-cli@latest --launch --manifest-file openfin.app.json
+        timeout-minutes: 1
+        continue-on-error: true
+
+      - name: Run OpenFin tests (skipped unless OPENFIN=1)
+        shell: pwsh
+        env:
+          OPENFIN: '1'
+        run: pnpm vitest run tests/business/*.openfin.spec.ts
