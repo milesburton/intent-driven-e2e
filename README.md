@@ -1,5 +1,12 @@
 # Playwright Domain-Driven Testing Example
 
+[![CI](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/milesburton/domain-driven-ui-testing/actions/workflows/ci.yml)
+[![Coverage Status](https://codecov.io/gh/milesburton/domain-driven-ui-testing/branch/main/graph/badge.svg)](https://codecov.io/gh/milesburton/domain-driven-ui-testing)
+![Node](https://img.shields.io/badge/node-22.x-43853d?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-9.x-f69220?logo=pnpm&logoColor=white)
+![ESLint](https://img.shields.io/badge/eslint-enabled-4B32C3?logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
+
 ## Overview
 
 This repository demonstrates a pragmatic approach to end-to-end testing of an OpenFin trade ticket using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/).

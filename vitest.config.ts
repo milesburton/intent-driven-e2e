@@ -6,6 +6,13 @@ export default defineConfig({
     hookTimeout: 60_000,
     environment: 'node',
     reporters: ['default'],
-    sequence: { concurrent: false }
+    sequence: { concurrent: false },
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: './coverage',
+      reporter: ['text', 'lcov'],
+      all: true,
+      include: ['tests/**/*.ts', 'app/src/**/*.ts']
+    }
   }
 });
