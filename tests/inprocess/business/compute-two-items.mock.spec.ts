@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { MockFormApp } from '../app/mock-form-app';
-import { itemA, itemB } from '../fixtures/items';
+import { MockFormApp } from '../../app/mock-form-app';
+import { itemA, itemB } from '../../shared/fixtures/items';
 
 test('compute two items (mock adapter)', async () => {
   const app = new MockFormApp();

@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
-import { items } from '../fixtures/items';
-import { describeOpenFin } from '../helpers/openfin';
+import { items } from '../../shared/fixtures/items';
+import { describeOpenFin } from '../../helpers/openfin';
 
 // Suite-level OpenFin helper handles gating and setup/teardown
 

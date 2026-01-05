@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
-import { Actor } from '../screenplay/core';
-import { StartNewRequest, Compute } from '../screenplay/tasks';
-import { ResultStatus, ResultValue } from '../screenplay/questions';
+import { Actor } from '../../screenplay/core';
+import { StartNewRequest, Compute } from '../../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../../screenplay/questions';
 
 const fixture = createChromiumFixture({
   expectedUrl: 'http://service.local/compute',

@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
-import { itemA, itemB } from '../fixtures/items';
-import { Actor } from '../screenplay/core';
-import { StartNewRequest, AddItem, Compute } from '../screenplay/tasks';
-import { ResultStatus, ResultValue } from '../screenplay/questions';
+import { itemA, itemB } from '../../shared/fixtures/items';
+import { Actor } from '../../screenplay/core';
+import { StartNewRequest, AddItem, Compute } from '../../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../../screenplay/questions';
 
 let seenPayload: unknown | null = null;
 const fixture = createChromiumFixture({

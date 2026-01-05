@@ -1,5 +1,5 @@
-import type { RequestFormApp } from '../domain/request-form-app.interface';
-import type { RequestItem, ComputeResult } from '../domain/models';
+import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
+import type { RequestItem, ComputeResult } from '../shared/domain/models';
 import { ERRORS, STATUS } from '../../app/src/types';
 
 function validateItem(item: RequestItem): string | null {

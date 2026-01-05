@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
-import { ERRORS, STATUS } from '../../app/src/types';
+import { ERRORS, STATUS } from '../../../app/src/types';
 
 const fixture = createChromiumFixture({
   expectedUrl: 'http://service.local/compute',

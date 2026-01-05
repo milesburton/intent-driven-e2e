@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { describeOpenFin } from '../helpers/openfin';
+import { describeOpenFin } from '../../helpers/openfin';
 
 describeOpenFin('Request Form – OpenFin Driver', ({ getApp, STATUS }) => {
   test('compute with no items returns FAILED', async () => {

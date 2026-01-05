@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { MockFormApp } from '../app/mock-form-app';
-import { Actor } from '../screenplay/core';
-import { StartNewRequest, Compute } from '../screenplay/tasks';
-import { ResultStatus, ResultValue } from '../screenplay/questions';
+import { MockFormApp } from '../../app/mock-form-app';
+import { Actor } from '../../screenplay/core';
+import { StartNewRequest, Compute } from '../../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../../screenplay/questions';
 
 test('compute with no items returns FAILED (Screenplay, mock adapter)', async () => {
   const app = new MockFormApp();

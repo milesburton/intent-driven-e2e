@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { ComputeResult, ComputeStatus } from '../domain/models';
+import type { ComputeResult, ComputeStatus } from '../shared/domain/models';
 
 export class ComputeResults {
   public constructor(private readonly page: Page) {}

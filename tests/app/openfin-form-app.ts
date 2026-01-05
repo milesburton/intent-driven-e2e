@@ -1,7 +1,7 @@
 import type { Browser, Page } from 'playwright';
 import { chromium } from 'playwright';
-import type { RequestFormApp } from '../domain/request-form-app.interface';
-import type { RequestItem, ComputeResult } from '../domain/models';
+import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
+import type { RequestItem, ComputeResult } from '../shared/domain/models';
 import { FormPage } from '../page-objects/form-page';
 
 export class OpenFinFormApp implements RequestFormApp {

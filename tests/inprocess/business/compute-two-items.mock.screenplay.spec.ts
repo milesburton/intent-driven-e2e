@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
-import { MockFormApp } from '../app/mock-form-app';
-import { itemA, itemB } from '../fixtures/items';
-import { Actor } from '../screenplay/core';
-import { StartNewRequest, AddItem, Compute } from '../screenplay/tasks';
-import { ResultStatus, ResultValue } from '../screenplay/questions';
+import { MockFormApp } from '../../app/mock-form-app';
+import { itemA, itemB } from '../../shared/fixtures/items';
+import { Actor } from '../../screenplay/core';
+import { StartNewRequest, AddItem, Compute } from '../../screenplay/tasks';
+import { ResultStatus, ResultValue } from '../../screenplay/questions';
 
 test('compute two items (Screenplay, mock adapter)', async () => {
   const app = new MockFormApp();

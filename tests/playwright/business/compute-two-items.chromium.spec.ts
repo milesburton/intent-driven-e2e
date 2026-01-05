@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { createChromiumFixture } from '../fixtures/chromium.fixture';
-import { itemA, itemB } from '../fixtures/items';
+import { itemA, itemB } from '../../shared/fixtures/items';
 
 let seenPayload: unknown | null = null;
 
