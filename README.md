@@ -8,19 +8,15 @@
 ![ESLint](https://img.shields.io/badge/eslint-enabled-4B32C3?logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 
-## Quick start
+## Quickstart
 
-- Chromium will run by default. No batteries required.
-- OpenFin e2e (manual setup required; runs all business tests across patterns):
-
-```bash
-pnpm test:e2e:openfin
-```
-
-- All-in-one validation (unit + e2e):
+Clone this repo and make sure you have your dependencies updated. You may need to perform some studio engineering if you're in a corporate environment. Once you're all setup fire off the following commands. If you want to dig further, the rest of this README.md should help, if not raise an issue. Cheers Thanks. 
 
 ```bash
-pnpm test:validate
+pnpm install
+pnpm test
+# pnpm test:e2e:openfin # if you're running an XServer (see below)
+# pnpm test:validate # Runs unit, chromium and openfin
 ```
 
 ## Overview
