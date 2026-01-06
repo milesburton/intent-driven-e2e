@@ -10,25 +10,33 @@
 
 ## Overview
 
-This repository demonstrates a pragmatic approach to end-to-end testing of a generic request form using Playwright **without coupling tests to UI structure**. This implements the Driver Pattern (ref: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/) and includes Screenplay pattern examples using the same abstraction.
+This repository demonstrates domain-driven UI testing with Playwright where tests express business intent rather than UI mechanics. It showcases two complementary patterns, Driver and Screenplay, implemented against the same typed domain interface.
 
-Our objective is to abstract the user's intent, placing a trade for example, from the underlying implementation such as clicking a button. With a suitable abstraction it shouldn't matter what is under test, whether that be a web app, desktop GUI or a Bloomberg terminal.
+- Driver pattern: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/
+- Screenplay pattern: https://serenity-js.org/handbook/design/screenplay-pattern/
 
-In this example we have a mock web app. The tests use a Page Object or Screenplay-style Tasks to interact with the page, but we do not expose the underlying implementation to the test author.
+The goal is to separate “what the user wants to achieve” (start a request, add items, compute) from “how the UI is clicked.” With a suitable abstraction, the same tests can target a web app, a desktop shell or other front-ends.
 
-We achieve this by introducing a **typed domain interface** that represents the capabilities of the application under test. Playwright and UI concerns are isolated behind that interface.
+We achieve this by introducing a **typed domain interface** that represents the capabilities of the application under test. Playwright and UI concerns (selectors, waits) are isolated behind that interface.
 
 ## Architecture
 
-    Tests (express business intent)
-       ↓
-    Typed Domain Interface (RequestFormApp)
-       ↓
-    Driver / Screenplay Tasks (Playwright implementation)
-       ↓
-    Page Objects (selectors, waits, retries)
+- Tests express business intent against a domain interface.
+- The domain interface (`RequestFormApp`) defines capabilities like `startNewRequest()`, `addItem()`, `compute()`.
+- Implementations adapt those capabilities to the UI using Playwright:
+  - Driver uses small focused page objects internally and exposes domain methods.
+  - Screenplay uses `Actor`, `Tasks`, and `Questions` composed over the same domain.
 
-Only the driver layer knows Playwright exists.
+Only the adapter layer “knows” about Playwright’s selectors, waits and retries. Tests remain UI-agnostic.
+
+## Design Rationale
+
+- Coexistence: Driver and Screenplay both target the same typed domain interface so teams can choose the style that best fits the scope and audience of a test while keeping behaviour consistent.
+- Driver: Minimal, pragmatic, and fast to write. Domain methods map directly to UI actions via small page objects hidden behind the adapter. Great for unit-like business flows and lean suites.
+- Screenplay: Composable and expressive. `Actor`, `Tasks`, and `Questions` improve readability at scale and encourage reuse of intent-focused actions. Ideal when scenarios grow, when many roles exist, or when you want richer reporting semantics.
+- Guidance: Start with Driver for most flows; adopt Screenplay where composition and readability offer clear benefits. Both remain thin veneers over the same capabilities (`startNewRequest()`, `addItem()`, `compute()`).
+- Page Objects: Used internally by adapters only. Tests never depend on selectors or widget vocabulary, keeping them resilient to UI reshuffles.
+- Determinism: Network interception returns controlled results to keep tests fast and predictable while still exercising full user flows.
 
 ## The application under test
 
@@ -40,19 +48,9 @@ A minimal but realistic request form UI is included under `app/` (Vite + TypeScr
 
 Why the network interception exists: the UI depends on an external compute service to produce results. In tests, we intercept that POST call and return a controlled payload. This keeps tests deterministic, fast, and isolated from real backends while still exercising the full user flow (clicks, waits, rendering).
 
-## Test example
+## Test examples
 
-Tests depend on the domain interface:
-
-```ts
-export interface RequestFormApp {
-  startNewRequest(): Promise<void>;
-  addItem(item: RequestItem): Promise<void>;
-  compute(): Promise<ComputeResult>;
-}
-```
-
-A test reads like intent:
+Driver (intent-focused):
 
 ```ts
 await app.startNewRequest();
@@ -61,7 +59,18 @@ await app.addItem(itemB);
 const result = await app.compute();
 ```
 
-No selectors. No UI widget vocabulary.
+Screenplay (actor/tasks/questions):
+
+```ts
+const trader = new Actor('Trader', fixture.app);
+await trader.attemptsTo(
+  new StartNewRequest(),
+  new AddItem(itemA),
+  new AddItem(itemB),
+  new Compute()
+);
+expect(await trader.asks(new ResultStatus())).toBe('PRICED');
+```
 
 ## Running locally
 
@@ -168,11 +177,13 @@ The workflow installs dependencies, installs Chromium for Playwright, and runs V
   - OpenFin adapter: [tests/app/openfin-form-app.ts](tests/app/openfin-form-app.ts)
   - Unified fixture: [tests/helpers/app-fixture.ts](tests/helpers/app-fixture.ts)
   - Page objects: [tests/driver/page-objects](tests/driver/page-objects)
-- Shared domain types and constants: [app/src/types.ts](app/src/types.ts)
+- Shared domain model:
+  - Domain types and status constants: [app/src/types.ts](app/src/types.ts)
+  - Test-side domain and interceptor interface: [tests/shared/domain/models.ts](tests/shared/domain/models.ts), [tests/shared/interfaces/pricing-interceptor.ts](tests/shared/interfaces/pricing-interceptor.ts)
 
 ## Network interception
 
-Tests exercise the full user flow and intercept the UI’s POST to `http://service.local/compute` via a shared interface:
+Tests exercise the full user flow and intercept the UI’s POST to `http://service.local/compute` via a shared interface.
 
 - Chromium: wired in [installPricingInterceptor()](tests/app/chromium-form-app.ts#L57)
 - OpenFin: wired in [installPricingInterceptor()](tests/app/openfin-form-app.ts#L93-L121)
