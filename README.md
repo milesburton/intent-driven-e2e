@@ -38,6 +38,19 @@ Only the adapter layer “knows” about Playwright’s selectors, waits and ret
 - Page Objects: Used internally by adapters only. Tests never depend on selectors or widget vocabulary, keeping them resilient to UI reshuffles.
 - Determinism: Network interception returns controlled results to keep tests fast and predictable while still exercising full user flows.
 
+## Comparison: Driver vs Screenplay
+
+| Aspect | Driver | Screenplay |
+|---|---|---|
+| Purpose | Fast, intent-focused mapping to domain actions | Composable tasks/questions for rich, readable scenarios |
+| Style | Procedural steps calling domain methods | `Actor` performs `Tasks` and asks `Questions` |
+| Composition | Low ceremony; direct calls | High composability; reuse and reporting-friendly |
+| Abstractions | Small page objects hidden behind adapter | Tasks/Questions layered over same adapter/domain |
+| When to use | Simple flows, smaller suites, quick iteration | Larger suites, multiple roles, shared behaviours |
+| Strengths | Minimal boilerplate, easy to learn | Expressive, modular, scales with complexity |
+| Trade-offs | Less structure for reuse/reporting | More ceremony; requires task/question design |
+| Example | [Driver tests](tests/driver/business) | [Screenplay tests](tests/screenplay/business) |
+
 ## The application under test
 
 A minimal but realistic request form UI is included under `app/` (Vite + TypeScript). It models:
