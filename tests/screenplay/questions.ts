@@ -16,3 +16,11 @@ export class ResultValue implements Question<number | undefined> {
     return result.pv;
   }
 }
+
+export class ResultError implements Question<string | undefined> {
+  async answeredBy(actor: Actor): Promise<string | undefined> {
+    const result = actor.recall<ComputeResult>('computeResult');
+    if (!result) throw new Error('No pricing result available');
+    return result.error;
+  }
+}
