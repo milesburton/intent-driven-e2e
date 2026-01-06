@@ -166,7 +166,7 @@ The workflow installs dependencies, installs Chromium for Playwright, and runs V
 - Adapters and fixtures:
   - Chromium adapter: [tests/app/chromium-form-app.ts](tests/app/chromium-form-app.ts)
   - OpenFin adapter: [tests/app/openfin-form-app.ts](tests/app/openfin-form-app.ts)
-  - Unified fixture: [tests/helpers/appFixture.ts](tests/helpers/appFixture.ts)
+  - Unified fixture: [tests/helpers/app-fixture.ts](tests/helpers/app-fixture.ts)
   - Page objects: [tests/driver/page-objects](tests/driver/page-objects)
 - Shared domain types and constants: [app/src/types.ts](app/src/types.ts)
 

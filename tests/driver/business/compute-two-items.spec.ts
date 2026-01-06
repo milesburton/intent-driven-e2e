@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { createAppFixture } from '../../helpers/appFixture';
+import { createAppFixture } from '../../helpers/app-fixture';
 import { itemA, itemB } from '../../shared/fixtures/items';
 
 const fixture = createAppFixture();
