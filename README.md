@@ -8,6 +8,21 @@
 ![ESLint](https://img.shields.io/badge/eslint-enabled-4B32C3?logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 
+## Quick start
+
+- Chromium will run by default. No batteries required.
+- OpenFin e2e (manual setup required; runs all business tests across patterns):
+
+```bash
+pnpm test:e2e:openfin
+```
+
+- All-in-one validation (unit + e2e):
+
+```bash
+pnpm test:validate
+```
+
 ## Overview
 
 This repository demonstrates domain-driven UI testing with Playwright where tests express business intent rather than UI mechanics. It showcases two complementary patterns, Driver and Screenplay, implemented against the same typed domain interface. This is very much an artifical project, please align it to your requirements.
@@ -112,21 +127,6 @@ Tests are written against a single domain interface and run identically across e
 
 - `chromium` (default): launches a local dev server and runs Playwright Chromium.
 - `openfin`: connects over CDP to an existing OpenFin runtime and page.
-
-### Quick start
-
-- Chromium will run by default. No batteries required.
-- OpenFin e2e (manual setup required; runs all business tests across patterns):
-
-```bash
-pnpm test:e2e:openfin
-```
-
-- All-in-one validation (unit + e2e):
-
-```bash
-pnpm test:validate
-```
 
 ## OpenFin (manual)
 
