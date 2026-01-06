@@ -8,8 +8,8 @@ const fixture = createAppFixture({
   response: { status: 'FAILED' }
 });
 
-describe('Compute — failed without error', () => {
-  it('fails with UNKNOWN error when server omits error', async () => {
+describe('Server returns failure without error', () => {
+  it('maps to FAILED with UNKNOWN error', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
 

@@ -9,8 +9,8 @@ const fixture = createAppFixture({
   response: { status: 'PRICED' }
 });
 
-describe('Compute — missing pv', () => {
-  it('fails when pv is missing', async () => {
+describe('Server omits pv on priced response', () => {
+  it('maps to FAILED with MISSING_PV', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
 

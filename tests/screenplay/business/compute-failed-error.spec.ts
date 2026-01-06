@@ -13,12 +13,12 @@ const fixture = createAppFixture({
 
 let trader: Actor;
 
-describe('Compute — explicit failure', () => {
+describe('Server reports a failure', () => {
   beforeEach(() => {
     trader = new Actor('Trader', fixture.app);
   });
 
-  it('returns FAILED with server-provided error', async () => {
+  it('propagates the error from the server', async () => {
     await trader.attemptsTo(new StartNewRequest(), new AddItem(itemA), new Compute());
     expect(await trader.asks(new ResultStatus())).toBe(STATUS.FAILED);
     expect(await trader.asks(new ResultError())).toBe('Boom');

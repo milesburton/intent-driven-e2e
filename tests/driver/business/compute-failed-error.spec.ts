@@ -8,8 +8,8 @@ const fixture = createAppFixture({
   response: { status: 'FAILED', error: 'Boom' }
 });
 
-describe('Compute — explicit failure', () => {
-  it('returns FAILED with server-provided error', async () => {
+describe('Server reports a failure', () => {
+  it('propagates the error from the server', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
 

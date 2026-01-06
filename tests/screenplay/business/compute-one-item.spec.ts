@@ -13,12 +13,12 @@ const fixture = createAppFixture({
 
 let trader: Actor;
 
-describe('Compute — one item', () => {
+describe('Pricing a single item', () => {
   beforeEach(() => {
     trader = new Actor('Trader', fixture.app);
   });
 
-  it('prices a single item', async () => {
+  it('returns PRICED with custom pv', async () => {
     await trader.attemptsTo(
       new StartNewRequest(),
       new AddItem(itemA),

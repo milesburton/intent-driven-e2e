@@ -5,8 +5,8 @@ import { STATUS } from '../../../app/src/types';
 
 const fixture = createAppFixture();
 
-describe('Compute — two items', () => {
-  it('prices two items', async () => {
+describe('Pricing two items', () => {
+  it('returns PRICED with expected value', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
     await fixture.app.addItem(itemB);

@@ -8,8 +8,8 @@ const fixture = createAppFixture({
   response: { status: 'PRICED', pv: 42 }
 });
 
-describe('Compute — one item', () => {
-  it('prices a single item', async () => {
+describe('Pricing a single item', () => {
+  it('returns PRICED with custom pv', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
 

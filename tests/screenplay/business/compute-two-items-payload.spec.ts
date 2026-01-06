@@ -18,13 +18,13 @@ const fixture = createAppFixture({
 
 let trader: Actor;
 
-describe('Compute — payload', () => {
+describe('Request payload — two items', () => {
   beforeEach(() => {
     captured = [];
     trader = new Actor('Trader', fixture.app);
   });
 
-  it('posts two items to compute service', async () => {
+  it('sends two items to the compute service', async () => {
     await trader.attemptsTo(
       new StartNewRequest(),
       new AddItem(itemA),
