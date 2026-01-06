@@ -1,4 +1,4 @@
-import type { RequestFormApp } from '../domain/request-form-app.interface';
+import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
 
 export interface Task {
   performAs(actor: Actor): Promise<void>;
