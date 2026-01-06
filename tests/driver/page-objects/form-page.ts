@@ -23,4 +23,8 @@ export class FormPage {
   public async clickCompute(): Promise<void> {
     await this.page.locator('[data-testid="compute"]').click();
   }
+
+  public async removeItem(index: number): Promise<void> {
+    await this.items.removeItem(index);
+  }
 }

@@ -14,7 +14,7 @@ const fixture = createAppFixture({
 });
 
 describe('Remove item — payload reflects deletion', () => {
-  it.skip('posts one item after removing the first', async () => {
+  it('posts one item after removing the first', async () => {
     captured = [];
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);

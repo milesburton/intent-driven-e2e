@@ -20,3 +20,10 @@ export class Compute implements Task {
     actor.remember('computeResult', result);
   }
 }
+
+export class RemoveItem implements Task {
+  constructor(private readonly index: number) {}
+  async performAs(actor: Actor): Promise<void> {
+    await actor.app.removeItem(this.index);
+  }
+}

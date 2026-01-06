@@ -22,6 +22,11 @@ export class MockFormApp implements RequestFormApp {
     this.items.push(item);
   }
 
+  public async removeItem(index: number): Promise<void> {
+    if (index < 0 || index >= this.items.length) return;
+    this.items.splice(index, 1);
+  }
+
   public async compute(): Promise<ComputeResult> {
     if (this.items.length === 0) {
       return { status: STATUS.FAILED, error: ERRORS.NO_ITEMS };

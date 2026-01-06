@@ -4,7 +4,7 @@ import { itemA } from '../../shared/fixtures/items';
 import { Actor } from '../core';
 import { StartNewRequest, AddItem, Compute } from '../tasks';
 import { ResultStatus } from '../questions';
-import { ERRORS, STATUS } from '../../../app/src/types';
+import { STATUS } from '../../../app/src/types';
 
 const fixture = createAppFixture({
   expectedUrl: 'http://service.local/compute',

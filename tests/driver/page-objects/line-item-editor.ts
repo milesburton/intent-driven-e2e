@@ -38,4 +38,10 @@ export class LineItemEditor {
     await this.page.locator(`[data-testid="item-expiry-${index}"]`).fill(item.expiry);
     await this.page.locator(`[data-testid="item-qty-${index}"]`).fill(String(item.quantity));
   }
+
+  public async removeItem(index: number): Promise<void> {
+    const row = this.page.locator(`[data-testid="item-row-${index}"]`);
+    await this.page.locator(`[data-testid="item-remove-${index}"]`).click();
+    await row.waitFor({ state: 'detached' });
+  }
 }

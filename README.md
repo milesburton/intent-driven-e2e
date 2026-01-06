@@ -10,7 +10,7 @@
 
 ## Overview
 
-This repository demonstrates domain-driven UI testing with Playwright where tests express business intent rather than UI mechanics. It showcases two complementary patterns, Driver and Screenplay, implemented against the same typed domain interface.
+This repository demonstrates domain-driven UI testing with Playwright where tests express business intent rather than UI mechanics. It showcases two complementary patterns, Driver and Screenplay, implemented against the same typed domain interface. This is very much an artifical project, please align it to your requirements.
 
 - Driver pattern: https://www.testmanagement.com/blog/2023/06/the-driver-pattern/
 - Screenplay pattern: https://serenity-js.org/handbook/design/screenplay-pattern/
@@ -40,16 +40,16 @@ Only the adapter layer “knows” about Playwright’s selectors, waits and ret
 
 ## Comparison: Driver vs Screenplay
 
-| Aspect | Driver | Screenplay |
-|---|---|---|
-| Purpose | Fast, intent-focused mapping to domain actions | Composable tasks/questions for rich, readable scenarios |
-| Style | Procedural steps calling domain methods | `Actor` performs `Tasks` and asks `Questions` |
-| Composition | Low ceremony; direct calls | High composability; reuse and reporting-friendly |
-| Abstractions | Small page objects hidden behind adapter | Tasks/Questions layered over same adapter/domain |
-| When to use | Simple flows, smaller suites, quick iteration | Larger suites, multiple roles, shared behaviours |
-| Strengths | Minimal boilerplate, easy to learn | Expressive, modular, scales with complexity |
-| Trade-offs | Less structure for reuse/reporting | More ceremony; requires task/question design |
-| Example | [Driver tests](tests/driver/business) | [Screenplay tests](tests/screenplay/business) |
+| Aspect       | Driver                                         | Screenplay                                              |
+| ------------ | ---------------------------------------------- | ------------------------------------------------------- |
+| Purpose      | Fast, intent-focused mapping to domain actions | Composable tasks/questions for rich, readable scenarios |
+| Style        | Procedural steps calling domain methods        | `Actor` performs `Tasks` and asks `Questions`           |
+| Composition  | Low ceremony; direct calls                     | High composability; reuse and reporting-friendly        |
+| Abstractions | Small page objects hidden behind adapter       | Tasks/Questions layered over same adapter/domain        |
+| When to use  | Simple flows, smaller suites, quick iteration  | Larger suites, multiple roles, shared behaviours        |
+| Strengths    | Minimal boilerplate, easy to learn             | Expressive, modular, scales with complexity             |
+| Trade-offs   | Less structure for reuse/reporting             | More ceremony; requires task/question design            |
+| Example      | [Driver tests](tests/driver/business)          | [Screenplay tests](tests/screenplay/business)           |
 
 ## The application under test
 
@@ -85,41 +85,11 @@ await trader.attemptsTo(
 expect(await trader.asks(new ResultStatus())).toBe('PRICED');
 ```
 
-## Running locally
-
-### Prerequisites
-
-- Node.js 22+
-- pnpm 9+
-- Playwright browsers installed: `pnpm exec playwright install --with-deps chromium`
-
-### Commands
-
-Install:
-
-```bash
-pnpm install
-```
-
-Run tests:
-
-```bash
-pnpm test
-```
-
-All-in-one validation:
-
-```bash
-pnpm test:validate
-```
-
-This runs unit tests, then Chromium e2e business suites. If `OPENFIN_CDP_URL` is present, it also runs OpenFin e2e before Chromium.
-
 ## Recommended Workflows
 
 - Daily checks: `pnpm test:validate`
-- Chromium e2e only: `pnpm test:e2e:chromium`
-- OpenFin e2e (host with OpenFin + `OPENFIN_CDP_URL`): `pnpm test:e2e:openfin`
+- OpenFin e2e: `pnpm test:e2e:openfin`
+  - Note: `test:validate` includes OpenFin when `OPENFIN_CDP_URL` is set.
 
 ## Dev Container
 
@@ -134,7 +104,7 @@ This project is designed to run inside a Dev Container.
 
 If you need headed mode, run Playwright on the host machine.
 
-The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server.
+The Dev Container forwards the X11 port (`6000`) and passes through `DISPLAY`, but does not include an X server. Note: Chromium explicitly blocks proxying to port 6000 due to X11 exploits, I picked an alterantive port for this reason - See set-openfin-port.mjs.
 
 ## Tests and environments
 
@@ -142,16 +112,10 @@ Tests are written against a single domain interface and run identically across e
 
 - `chromium` (default): launches a local dev server and runs Playwright Chromium.
 - `openfin`: connects over CDP to an existing OpenFin runtime and page.
-- `mock`: runs against a pure in-memory implementation (no browser).
 
 ### Quick start
 
-- Chromium e2e (runs all business tests across patterns):
-
-```bash
-pnpm test:e2e:chromium
-```
-
+- Chromium will run by default. No batteries required.
 - OpenFin e2e (manual setup required; runs all business tests across patterns):
 
 ```bash

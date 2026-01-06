@@ -24,7 +24,7 @@ describe('Remove item — payload reflects deletion', () => {
     trader = new Actor('Trader', fixture.app);
   });
 
-  it.skip('posts one item after removing the first', async () => {
+  it('posts one item after removing the first', async () => {
     await trader.attemptsTo(
       new StartNewRequest(),
       new AddItem(itemA),
