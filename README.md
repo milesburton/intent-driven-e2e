@@ -107,6 +107,14 @@ Run tests:
 pnpm test
 ```
 
+All-in-one validation:
+
+```bash
+pnpm test:validate
+```
+
+This runs unit tests, then Chromium e2e business suites. If `OPENFIN_CDP_URL` is present, it also runs OpenFin e2e before Chromium.
+
 ## Dev Container
 
 This project is designed to run inside a Dev Container.
@@ -132,22 +140,22 @@ Tests are written against a single domain interface and run identically across e
 
 ### Quick start
 
-- Chromium business suites:
+- Chromium e2e (runs all business tests across patterns):
 
 ```bash
 pnpm test:e2e:chromium
 ```
 
-- OpenFin business suites (see OpenFin section below first):
+- OpenFin e2e (manual setup required; runs all business tests across patterns):
 
 ```bash
 pnpm test:e2e:openfin
 ```
 
-- Full suite (unit + business on Chromium):
+- All-in-one validation (unit + e2e):
 
 ```bash
-pnpm test
+pnpm test:validate
 ```
 
 ## OpenFin (manual)
@@ -185,6 +193,7 @@ The workflow installs dependencies, installs Chromium for Playwright, and runs V
 - Business tests (pattern-first):
   - Driver: [tests/driver/business](tests/driver/business)
   - Screenplay: [tests/screenplay/business](tests/screenplay/business)
+  - Scripts use a unified glob to run all business tests across both patterns.
 - Adapters and fixtures:
   - Chromium adapter: [tests/app/chromium-form-app.ts](tests/app/chromium-form-app.ts)
   - OpenFin adapter: [tests/app/openfin-form-app.ts](tests/app/openfin-form-app.ts)
