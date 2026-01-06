@@ -115,6 +115,12 @@ pnpm test:validate
 
 This runs unit tests, then Chromium e2e business suites. If `OPENFIN_CDP_URL` is present, it also runs OpenFin e2e before Chromium.
 
+## Recommended Workflows
+
+- Daily checks: `pnpm test:validate`
+- Chromium e2e only: `pnpm test:e2e:chromium`
+- OpenFin e2e (host with OpenFin + `OPENFIN_CDP_URL`): `pnpm test:e2e:openfin`
+
 ## Dev Container
 
 This project is designed to run inside a Dev Container.
