@@ -5,17 +5,17 @@ import { STATUS } from '../../../app/src/types';
 
 const fixture = createAppFixture({
   expectedUrl: 'http://service.local/compute',
-  response: { status: 'PRICED', pv: 42 }
+  response: { status: 'COMPLETED', value: 42 }
 });
 
-describe('Pricing a single item', () => {
-  it('returns PRICED with custom pv', async () => {
+describe('Compute a single item', () => {
+  it('returns COMPLETED with custom value', async () => {
     await fixture.app.startNewRequest();
     await fixture.app.addItem(itemA);
 
     const result = await fixture.app.compute();
 
-    expect(result.status).toBe(STATUS.PRICED);
-    expect(result.pv).toBe(42);
+    expect(result.status).toBe(STATUS.COMPLETED);
+    expect(result.value).toBe(42);
   });
 });

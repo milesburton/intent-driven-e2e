@@ -10,7 +10,7 @@ const fixture = createAppFixture({
   onRequest: (payload: unknown) => {
     captured.push(payload);
   },
-  response: { status: 'PRICED', pv: 999 }
+  response: { status: 'COMPLETED', value: 999 }
 });
 
 describe('Remove item — payload reflects deletion', () => {
@@ -29,7 +29,7 @@ describe('Remove item — payload reflects deletion', () => {
     expect(Array.isArray(body.items)).toBe(true);
     expect(body.items.length).toBe(1);
 
-    expect(result.status).toBe(STATUS.PRICED);
-    expect(result.pv).toBe(999);
+    expect(result.status).toBe(STATUS.COMPLETED);
+    expect(result.value).toBe(999);
   });
 });

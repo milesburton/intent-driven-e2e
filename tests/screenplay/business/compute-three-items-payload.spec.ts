@@ -13,7 +13,7 @@ const fixture = createAppFixture({
   onRequest: (payload: unknown) => {
     captured.push(payload);
   },
-  response: { status: 'PRICED', pv: 200 }
+  response: { status: 'COMPLETED', value: 200 }
 });
 
 let trader: Actor;
@@ -38,7 +38,7 @@ describe('Request payload — three items', () => {
     expect(Array.isArray(body.items)).toBe(true);
     expect(body.items.length).toBe(3);
 
-    expect(await trader.asks(new ResultStatus())).toBe(STATUS.PRICED);
+    expect(await trader.asks(new ResultStatus())).toBe(STATUS.COMPLETED);
     expect(await trader.asks(new ResultValue())).toBe(200);
   });
 });

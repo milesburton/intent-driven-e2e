@@ -64,20 +64,20 @@ function createApp(root: HTMLElement): void {
   kStatus.textContent = 'Status';
   const vStatus = el('div', { 'data-testid': 'result-status' });
 
-  const kPv = el('div');
-  kPv.textContent = 'Value';
-  const vPv = el('div', { 'data-testid': 'result-value' });
+  const kValue = el('div');
+  kValue.textContent = 'Value';
+  const vValue = el('div', { 'data-testid': 'result-value' });
 
   const kError = el('div');
   kError.textContent = 'Error';
   const vError = el('div', { 'data-testid': 'result-error' });
 
-  kv.append(kStatus, vStatus, kPv, vPv, kError, vError);
+  kv.append(kStatus, vStatus, kValue, vValue, kError, vError);
   resultsPanel.append(resultsTitle, kv);
 
   function renderResults(): void {
     vStatus.textContent = state.result.status;
-    vPv.textContent = state.result.pv !== undefined ? String(state.result.pv) : '';
+    vValue.textContent = state.result.value !== undefined ? String(state.result.value) : '';
     vError.textContent = state.result.error ?? '';
   }
 
@@ -184,7 +184,7 @@ function createApp(root: HTMLElement): void {
       return;
     }
 
-    state.result = { status: STATUS.PRICING };
+    state.result = { status: STATUS.PROCESSING };
     renderResults();
 
     try {

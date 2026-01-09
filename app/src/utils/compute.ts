@@ -18,7 +18,7 @@ export function parseComputeResult(payload: unknown): ComputeResult {
   const obj = payload as JsonObject;
 
   const status = obj['status'];
-  if (status !== STATUS.PRICED && status !== STATUS.FAILED) {
+  if (status !== STATUS.COMPLETED && status !== STATUS.FAILED) {
     return { status: STATUS.FAILED, error: ERRORS.INVALID_STATUS };
   }
 
@@ -27,10 +27,10 @@ export function parseComputeResult(payload: unknown): ComputeResult {
     return { status: STATUS.FAILED, error: isString(error) ? error : ERRORS.UNKNOWN };
   }
 
-  const pv = obj['pv'];
-  if (!isFiniteNumber(pv)) {
-    return { status: STATUS.FAILED, error: ERRORS.MISSING_PV };
+  const value = obj['value'];
+  if (!isFiniteNumber(value)) {
+    return { status: STATUS.FAILED, error: ERRORS.MISSING_VALUE };
   }
 
-  return { status: STATUS.PRICED, pv };
+  return { status: STATUS.COMPLETED, value };
 }

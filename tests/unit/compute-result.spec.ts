@@ -35,21 +35,21 @@ describe('parseComputeResult', () => {
     });
   });
 
-  it('returns FAILED when pv is missing or not a finite number', () => {
-    expect(parseComputeResult({ status: STATUS.PRICED })).toEqual({
+  it('returns FAILED when value is missing or not a finite number', () => {
+    expect(parseComputeResult({ status: STATUS.COMPLETED })).toEqual({
       status: STATUS.FAILED,
-      error: ERRORS.MISSING_PV
+      error: ERRORS.MISSING_VALUE
     });
-    expect(parseComputeResult({ status: STATUS.PRICED, pv: 'NaN' })).toEqual({
+    expect(parseComputeResult({ status: STATUS.COMPLETED, value: 'NaN' })).toEqual({
       status: STATUS.FAILED,
-      error: ERRORS.MISSING_PV
+      error: ERRORS.MISSING_VALUE
     });
   });
 
-  it('returns PRICED with pv when valid', () => {
-    expect(parseComputeResult({ status: STATUS.PRICED, pv: 123.45 })).toEqual({
-      status: STATUS.PRICED,
-      pv: 123.45
+  it('returns COMPLETED with value when valid', () => {
+    expect(parseComputeResult({ status: STATUS.COMPLETED, value: 123.45 })).toEqual({
+      status: STATUS.COMPLETED,
+      value: 123.45
     });
   });
 });

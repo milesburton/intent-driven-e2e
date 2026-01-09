@@ -32,12 +32,12 @@ export class MockFormApp implements RequestFormApp {
       return { status: STATUS.FAILED, error: ERRORS.NO_ITEMS };
     }
 
-    const pv = this.items.reduce((acc, item) => {
+    const value = this.items.reduce((acc, item) => {
       const sideSign = item.side === 'IN' ? 1 : -1;
       const typeScale = item.type === 'A' ? 1.0 : 0.9;
       return acc + sideSign * item.quantity * item.strike * typeScale;
     }, 0);
 
-    return { status: STATUS.PRICED, pv: Number(pv.toFixed(2)) };
+    return { status: STATUS.COMPLETED, value: Number(value.toFixed(2)) };
   }
 }

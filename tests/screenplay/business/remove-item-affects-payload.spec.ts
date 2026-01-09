@@ -13,7 +13,7 @@ const fixture = createAppFixture({
   onRequest: (payload: unknown) => {
     captured.push(payload);
   },
-  response: { status: 'PRICED', pv: 888 }
+  response: { status: 'COMPLETED', value: 888 }
 });
 
 let trader: Actor;
@@ -38,7 +38,7 @@ describe('Remove item — payload reflects deletion', () => {
     expect(Array.isArray(body.items)).toBe(true);
     expect(body.items.length).toBe(1);
 
-    expect(await trader.asks(new ResultStatus())).toBe(STATUS.PRICED);
+    expect(await trader.asks(new ResultStatus())).toBe(STATUS.COMPLETED);
     expect(await trader.asks(new ResultValue())).toBe(888);
   });
 });

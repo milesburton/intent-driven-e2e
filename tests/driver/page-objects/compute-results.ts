@@ -9,24 +9,24 @@ export class ComputeResults {
       (await this.page.locator('[data-testid="result-status"]').textContent()) ?? '';
     const status = this.parseStatus(statusText.trim());
 
-    const pvText = (
+    const valueText = (
       (await this.page.locator('[data-testid="result-value"]').textContent()) ?? ''
     ).trim();
     const errorText = (
       (await this.page.locator('[data-testid="result-error"]').textContent()) ?? ''
     ).trim();
 
-    const pv = pvText.length > 0 ? Number(pvText) : undefined;
+    const value = valueText.length > 0 ? Number(valueText) : undefined;
     const error = errorText.length > 0 ? errorText : undefined;
 
-    return { status, pv: Number.isFinite(pv ?? NaN) ? pv : undefined, error };
+    return { status, value: Number.isFinite(value ?? NaN) ? value : undefined, error };
   }
 
   private parseStatus(value: string): ComputeStatus {
     switch (value) {
       case 'IDLE':
-      case 'PRICING':
-      case 'PRICED':
+      case 'PROCESSING':
+      case 'COMPLETED':
       case 'FAILED':
         return value;
       default:
@@ -37,7 +37,7 @@ export class ComputeResults {
   public async waitForResult(timeoutMs = 30000): Promise<ComputeResult> {
     await this.page
       .locator('[data-testid="result-status"]')
-      .filter({ hasText: /^(PRICED|FAILED)$/ })
+      .filter({ hasText: /^(COMPLETED|FAILED)$/ })
       .waitFor({ timeout: timeoutMs });
     return this.read();
   }
