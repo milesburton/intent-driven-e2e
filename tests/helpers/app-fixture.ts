@@ -6,15 +6,15 @@ import { ChromiumFormApp } from '../app/chromium-form-app';
 import { OpenFinFormApp } from '../app/openfin-form-app';
 import { MockFormApp } from '../app/mock-form-app';
 import { startViteAppServer, type RunningServer } from '../driver/fixtures/server';
-import type { PricingInterceptor } from '../shared/interfaces/pricing-interceptor';
-import { STATUS_PRICED } from '../shared/domain/models';
+import type { ComputeInterceptor } from '../shared/interfaces/pricing-interceptor';
+import { STATUS_COMPLETED } from '../shared/domain/models';
 import { resolveAdapter } from '../shared/helpers/utils';
 
 export interface AppFixture {
   readonly app: RequestFormApp;
 }
 
-export function createAppFixture(interceptor?: PricingInterceptor): AppFixture {
+export function createAppFixture(interceptor?: ComputeInterceptor): AppFixture {
   const adapter = resolveAdapter();
 
   let browser: Browser | null = null;
@@ -66,7 +66,7 @@ export function createAppFixture(interceptor?: PricingInterceptor): AppFixture {
         server.baseUrl,
         interceptor ?? {
           expectedUrl: 'http://service.local/compute',
-          response: { status: STATUS_PRICED, pv: 123.45 }
+          response: { status: STATUS_COMPLETED, value: 123.45 }
         }
       );
       await chromiumApp.init();
@@ -82,7 +82,7 @@ export function createAppFixture(interceptor?: PricingInterceptor): AppFixture {
         process.env.OPENFIN_CDP_URL,
         interceptor ?? {
           expectedUrl: 'http://service.local/compute',
-          response: { status: STATUS_PRICED, pv: 123.45 }
+          response: { status: STATUS_COMPLETED, value: 123.45 }
         }
       );
       await openfinApp.init();

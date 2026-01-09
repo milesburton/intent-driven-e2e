@@ -4,8 +4,8 @@
     "arguments": "--remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --remote-allow-origins=*"
   },
   "startup_app": {
-    "name": "DomainDrivenUITesting",
-    "uuid": "domain-driven-ui-testing-app",
+    "name": "PlaywrightDomainDrivenTesting",
+    "uuid": "playwright-domain-driven-testing-example-app",
     "url": "http://127.0.0.1:5500",
     "autoShow": true
   }

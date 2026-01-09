@@ -10,15 +10,15 @@ export interface RequestItem {
 }
 
 export interface ComputeResult {
-  status: 'IDLE' | 'PRICING' | 'PRICED' | 'FAILED';
-  pv?: number;
+  status: 'IDLE' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  value?: number;
   error?: string;
 }
 
 export const STATUS = {
   IDLE: 'IDLE' as const,
-  PRICING: 'PRICING' as const,
-  PRICED: 'PRICED' as const,
+  PROCESSING: 'PROCESSING' as const,
+  COMPLETED: 'COMPLETED' as const,
   FAILED: 'FAILED' as const
 };
 
