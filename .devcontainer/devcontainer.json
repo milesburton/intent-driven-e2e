@@ -9,14 +9,24 @@
       "extensions": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-playwright.playwright"
+        "ms-playwright.playwright",
+        "anthropic.claude-code", // Claude Code for VS Code
+        "continue.continue", // Continue open-source AI agent
+        "ms-vscode-remote.remote-containers" // Dev Containers support
       ],
       "settings": {
         "terminal.integrated.profiles.linux": {
           "bash": { "path": "/bin/bash" },
           "fish": { "path": "/usr/bin/fish" }
         },
-        "terminal.integrated.defaultProfile.linux": "bash"
+        "terminal.integrated.defaultProfile.linux": "bash",
+        // Increase file watcher limits for large projects/dev containers
+        "files.watcherExclude": {
+          "**/.git/objects/**": true,
+          "**/node_modules/**": true
+        },
+        "files.maxMemoryForLargeFilesMB": 4096,
+        "files.autoSave": "onWindowChange"
       }
     }
   },
