@@ -95,7 +95,7 @@ await trader.attemptsTo(
   new AddItem(itemB),
   new Compute()
 );
-expect(await trader.asks(new ResultStatus())).toBe('PRICED');
+expect(await trader.asks(new ResultStatus())).toBe('COMPLETED');
 ```
 
 ## Recommended Workflows
@@ -169,13 +169,13 @@ The workflow installs dependencies, installs Chromium for Playwright, and runs V
   - Page objects: [tests/driver/page-objects](tests/driver/page-objects)
 - Shared domain model:
   - Domain types and status constants: [app/src/types.ts](app/src/types.ts)
-  - Test-side domain and interceptor interface: [tests/shared/domain/models.ts](tests/shared/domain/models.ts), [tests/shared/interfaces/pricing-interceptor.ts](tests/shared/interfaces/pricing-interceptor.ts)
+  - Test-side domain and interceptor interface: [tests/shared/domain/models.ts](tests/shared/domain/models.ts), [tests/shared/interfaces/compute-interceptor.ts](tests/shared/interfaces/compute-interceptor.ts)
 
 ## Network interception
 
-Tests exercise the full user flow and intercept the UI’s POST to `http://service.local/compute` via a shared interface.
+Tests exercise the full user flow and intercept the UI's POST to `http://service.local/compute` via a shared interface.
 
-- Chromium: wired in [installPricingInterceptor()](tests/app/chromium-form-app.ts#L57)
-- OpenFin: wired in [installPricingInterceptor()](tests/app/openfin-form-app.ts#L93-L121)
+- Chromium: wired in [installComputeInterceptor()](tests/app/chromium-form-app.ts#L45)
+- OpenFin: wired in [installComputeInterceptor()](tests/app/openfin-form-app.ts#L116)
 
 Provide `expectedUrl`, `response`, and optional `onRequest(payload)` to the unified fixture. The same interceptor config is used across environments.

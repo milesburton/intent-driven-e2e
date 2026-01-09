@@ -30,7 +30,17 @@
       }
     }
   },
-  "runArgs": ["--shm-size=1gb", "-e", "DISPLAY=${localEnv:DISPLAY}"],
+  "runArgs": ["--shm-size=1gb"],
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+    "PULSE_SERVER": "${localEnv:PULSE_SERVER}"
+  },
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+    "source=/mnt/wslg,target=/mnt/wslg,type=bind,consistency=cached"
+  ],
   "forwardPorts": [6000],
   "postCreateCommand": "corepack prepare pnpm@9.0.0 --activate && pnpm install"
 }

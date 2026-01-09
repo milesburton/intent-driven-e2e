@@ -1,10 +1,10 @@
-import { expect, test } from 'vitest';
-import { createAppFixture } from '../../helpers/appFixture';
-import { ERRORS, STATUS } from '../../../app/src/types';
+import { expect, test } from "vitest";
+import { createAppFixture } from "../../helpers/appFixture";
+import { ERRORS, STATUS } from "../../../app/src/types";
 
 const fixture = createAppFixture();
 
-test('compute with no items returns FAILED', async () => {
+test("compute with no items returns FAILED", async () => {
   await fixture.app.startNewRequest();
   const result = await fixture.app.compute();
 

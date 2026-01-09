@@ -1,5 +1,5 @@
-import type { RequestItem, ComputeResult } from '../domain/models';
-import type { Actor, Task } from './core';
+import type { RequestItem, ComputeResult } from "../domain/models";
+import type { Actor, Task } from "./core";
 
 export class StartNewRequest implements Task {
   async performAs(actor: Actor): Promise<void> {
@@ -17,7 +17,7 @@ export class AddItem implements Task {
 export class Compute implements Task {
   async performAs(actor: Actor): Promise<void> {
     const result: ComputeResult = await actor.app.compute();
-    actor.remember('computeResult', result);
+    actor.remember("computeResult", result);
   }
 }
 

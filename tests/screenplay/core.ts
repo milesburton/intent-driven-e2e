@@ -1,4 +1,4 @@
-import type { RequestFormApp } from '../shared/domain/request-form-app.interface';
+import type { RequestFormApp } from "../shared/domain/request-form-app.interface";
 
 export interface Task {
   performAs(actor: Actor): Promise<void>;
@@ -12,7 +12,7 @@ export class Actor {
   private memory = new Map<string, unknown>();
   public constructor(
     public readonly name: string,
-    public readonly app: RequestFormApp
+    public readonly app: RequestFormApp,
   ) {}
 
   public async attemptsTo(...tasks: Task[]): Promise<void> {

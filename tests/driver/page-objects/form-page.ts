@@ -1,6 +1,6 @@
-import type { Page } from 'playwright';
-import { LineItemEditor } from './line-item-editor';
-import { ComputeResults } from './compute-results';
+import type { Page } from "playwright";
+import { LineItemEditor } from "./line-item-editor";
+import { ComputeResults } from "./compute-results";
 
 export class FormPage {
   public readonly items: LineItemEditor;
@@ -12,7 +12,7 @@ export class FormPage {
   }
 
   public async goto(baseUrl: string): Promise<void> {
-    await this.page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    await this.page.goto(baseUrl, { waitUntil: "domcontentloaded" });
     await this.page.locator('[data-testid="request-form"]').waitFor();
   }
 

@@ -1,4 +1,6 @@
-pnpm exec lint-staged
+# Run Biome formatting and linting
+pnpm run format
+pnpm run lint
 
 # Conditionally run OpenFin specs if an agent is available
 bash scripts/precommit-openfin.sh

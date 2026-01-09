@@ -1,14 +1,14 @@
-import './styles.css';
-import type { RequestItem, ComputeResult, Direction, Kind } from './types';
-import { ERRORS, STATUS } from './types';
-import { parseComputeResult } from './utils/compute';
+import "./styles.css";
+import type { RequestItem, ComputeResult, Direction, Kind } from "./types";
+import { ERRORS, STATUS } from "./types";
+import { parseComputeResult } from "./utils/compute";
 const buildEnv = globalThis as unknown as { __BUILD_HASH__?: string };
-const buildHash: string = buildEnv.__BUILD_HASH__ ?? 'dev';
-window.console.log('[app] build:', buildHash);
+const buildHash: string = buildEnv.__BUILD_HASH__ ?? "dev";
+window.console.log("[app] build:", buildHash);
 
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
-  attrs?: Record<string, string>
+  attrs?: Record<string, string>,
 ): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
   if (attrs) {
@@ -22,147 +22,147 @@ function el<K extends keyof HTMLElementTagNameMap>(
 function createApp(root: HTMLElement): void {
   const state: { items: RequestItem[]; result: ComputeResult } = {
     items: [],
-    result: { status: STATUS.IDLE }
+    result: { status: STATUS.IDLE },
   };
 
-  const container = el('div', { class: 'container', 'data-testid': 'request-form' });
-  const title = el('h1');
-  title.textContent = 'Request Form';
+  const container = el("div", { class: "container", "data-testid": "request-form" });
+  const title = el("h1");
+  title.textContent = "Request Form";
 
-  const toolbar = el('div', { class: 'toolbar' });
+  const toolbar = el("div", { class: "toolbar" });
 
-  const newTicketBtn = el('button', { type: 'button', 'data-testid': 'new-request' });
-  newTicketBtn.textContent = 'New request';
+  const newTicketBtn = el("button", { type: "button", "data-testid": "new-request" });
+  newTicketBtn.textContent = "New request";
 
-  const addLegBtn = el('button', { type: 'button', 'data-testid': 'add-item' });
-  addLegBtn.textContent = 'Add item';
+  const addLegBtn = el("button", { type: "button", "data-testid": "add-item" });
+  addLegBtn.textContent = "Add item";
 
-  const priceBtn = el('button', { type: 'button', 'data-testid': 'compute' });
-  priceBtn.textContent = 'Compute';
+  const computeBtn = el("button", { type: "button", "data-testid": "compute" });
+  computeBtn.textContent = "Compute";
 
-  toolbar.append(newTicketBtn, addLegBtn, priceBtn);
+  toolbar.append(newTicketBtn, addLegBtn, computeBtn);
 
-  const table = el('table', { 'data-testid': 'items-table' });
-  const thead = el('thead');
-  const headRow = el('tr');
-  for (const h of ['Direction', 'Category', 'Value', 'Date', 'Quantity', 'Remove']) {
-    const th = el('th');
+  const table = el("table", { "data-testid": "items-table" });
+  const thead = el("thead");
+  const headRow = el("tr");
+  for (const h of ["Direction", "Category", "Value", "Date", "Quantity", "Remove"]) {
+    const th = el("th");
     th.textContent = h;
     headRow.append(th);
   }
   thead.append(headRow);
 
-  const tbody = el('tbody', { 'data-testid': 'items-body' });
+  const tbody = el("tbody", { "data-testid": "items-body" });
   table.append(thead, tbody);
 
-  const resultsPanel = el('div', { class: 'panel', 'data-testid': 'compute-results' });
-  const resultsTitle = el('div');
-  resultsTitle.textContent = 'Results';
-  const kv = el('div', { class: 'kv' });
+  const resultsPanel = el("div", { class: "panel", "data-testid": "compute-results" });
+  const resultsTitle = el("div");
+  resultsTitle.textContent = "Results";
+  const kv = el("div", { class: "kv" });
 
-  const kStatus = el('div');
-  kStatus.textContent = 'Status';
-  const vStatus = el('div', { 'data-testid': 'result-status' });
+  const kStatus = el("div");
+  kStatus.textContent = "Status";
+  const vStatus = el("div", { "data-testid": "result-status" });
 
-  const kValue = el('div');
-  kValue.textContent = 'Value';
-  const vValue = el('div', { 'data-testid': 'result-value' });
+  const kValue = el("div");
+  kValue.textContent = "Value";
+  const vValue = el("div", { "data-testid": "result-value" });
 
-  const kError = el('div');
-  kError.textContent = 'Error';
-  const vError = el('div', { 'data-testid': 'result-error' });
+  const kError = el("div");
+  kError.textContent = "Error";
+  const vError = el("div", { "data-testid": "result-error" });
 
   kv.append(kStatus, vStatus, kValue, vValue, kError, vError);
   resultsPanel.append(resultsTitle, kv);
 
   function renderResults(): void {
     vStatus.textContent = state.result.status;
-    vValue.textContent = state.result.value !== undefined ? String(state.result.value) : '';
-    vError.textContent = state.result.error ?? '';
+    vValue.textContent = state.result.value !== undefined ? String(state.result.value) : "";
+    vError.textContent = state.result.error ?? "";
   }
 
   function renderLegs(): void {
-    tbody.textContent = '';
+    tbody.textContent = "";
 
     state.items.forEach((item, idx) => {
-      const row = el('tr', { 'data-testid': `item-row-${idx}` });
+      const row = el("tr", { "data-testid": `item-row-${idx}` });
 
-      const sideSel = el('select', { 'data-testid': `item-side-${idx}` });
-      const sideIn = el('option');
-      sideIn.value = 'IN';
-      sideIn.textContent = 'IN';
-      const sideOut = el('option');
-      sideOut.value = 'OUT';
-      sideOut.textContent = 'OUT';
+      const sideSel = el("select", { "data-testid": `item-side-${idx}` });
+      const sideIn = el("option");
+      sideIn.value = "IN";
+      sideIn.textContent = "IN";
+      const sideOut = el("option");
+      sideOut.value = "OUT";
+      sideOut.textContent = "OUT";
       sideSel.append(sideIn, sideOut);
       sideSel.value = item.side;
 
-      sideSel.addEventListener('change', () => {
+      sideSel.addEventListener("change", () => {
         const v = sideSel.value;
-        if (v === 'IN' || v === 'OUT') {
+        if (v === "IN" || v === "OUT") {
           item.side = v as Direction;
         }
       });
 
-      const typeSel = el('select', { 'data-testid': `item-type-${idx}` });
-      const aOpt = el('option');
-      aOpt.value = 'A';
-      aOpt.textContent = 'A';
-      const bOpt = el('option');
-      bOpt.value = 'B';
-      bOpt.textContent = 'B';
+      const typeSel = el("select", { "data-testid": `item-type-${idx}` });
+      const aOpt = el("option");
+      aOpt.value = "A";
+      aOpt.textContent = "A";
+      const bOpt = el("option");
+      bOpt.value = "B";
+      bOpt.textContent = "B";
       typeSel.append(aOpt, bOpt);
       typeSel.value = item.type;
 
-      typeSel.addEventListener('change', () => {
+      typeSel.addEventListener("change", () => {
         const v = typeSel.value;
-        if (v === 'A' || v === 'B') {
+        if (v === "A" || v === "B") {
           item.type = v as Kind;
         }
       });
 
-      const strikeInput = el('input', { type: 'number', 'data-testid': `item-strike-${idx}` });
+      const strikeInput = el("input", { type: "number", "data-testid": `item-strike-${idx}` });
       strikeInput.value = String(item.strike);
-      strikeInput.addEventListener('input', () => {
+      strikeInput.addEventListener("input", () => {
         const n = Number(strikeInput.value);
         if (Number.isFinite(n)) {
           item.strike = n;
         }
       });
 
-      const expiryInput = el('input', { type: 'date', 'data-testid': `item-expiry-${idx}` });
+      const expiryInput = el("input", { type: "date", "data-testid": `item-expiry-${idx}` });
       expiryInput.value = item.expiry;
-      expiryInput.addEventListener('input', () => {
+      expiryInput.addEventListener("input", () => {
         item.expiry = expiryInput.value;
       });
 
-      const qtyInput = el('input', { type: 'number', 'data-testid': `item-qty-${idx}` });
+      const qtyInput = el("input", { type: "number", "data-testid": `item-qty-${idx}` });
       qtyInput.value = String(item.quantity);
-      qtyInput.addEventListener('input', () => {
+      qtyInput.addEventListener("input", () => {
         const n = Number(qtyInput.value);
         if (Number.isFinite(n)) {
           item.quantity = n;
         }
       });
 
-      const removeBtn = el('button', { type: 'button', 'data-testid': `item-remove-${idx}` });
-      removeBtn.textContent = 'Remove';
-      removeBtn.addEventListener('click', () => {
+      const removeBtn = el("button", { type: "button", "data-testid": `item-remove-${idx}` });
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", () => {
         state.items.splice(idx, 1);
         renderLegs();
       });
 
-      const tdSide = el('td');
+      const tdSide = el("td");
       tdSide.append(sideSel);
-      const tdType = el('td');
+      const tdType = el("td");
       tdType.append(typeSel);
-      const tdStrike = el('td');
+      const tdStrike = el("td");
       tdStrike.append(strikeInput);
-      const tdExpiry = el('td');
+      const tdExpiry = el("td");
       tdExpiry.append(expiryInput);
-      const tdQty = el('td');
+      const tdQty = el("td");
       tdQty.append(qtyInput);
-      const tdRemove = el('td');
+      const tdRemove = el("td");
       tdRemove.append(removeBtn);
 
       row.append(tdSide, tdType, tdStrike, tdExpiry, tdQty, tdRemove);
@@ -172,12 +172,12 @@ function createApp(root: HTMLElement): void {
 
   function reset(): void {
     state.items = [];
-    state.result = { status: 'IDLE' };
+    state.result = { status: "IDLE" };
     renderLegs();
     renderResults();
   }
 
-  async function price(): Promise<void> {
+  async function compute(): Promise<void> {
     if (state.items.length === 0) {
       state.result = { status: STATUS.FAILED, error: ERRORS.NO_ITEMS };
       renderResults();
@@ -188,10 +188,10 @@ function createApp(root: HTMLElement): void {
     renderResults();
 
     try {
-      const response = await fetch('http://service.local/compute', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ items: state.items })
+      const response = await fetch("http://service.local/compute", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ items: state.items }),
       });
 
       const data: unknown = await response.json();
@@ -200,26 +200,26 @@ function createApp(root: HTMLElement): void {
     } catch (e: unknown) {
       state.result = {
         status: STATUS.FAILED,
-        error: e instanceof Error ? e.message : ERRORS.UNKNOWN
+        error: e instanceof Error ? e.message : ERRORS.UNKNOWN,
       };
       renderResults();
     }
   }
 
-  newTicketBtn.addEventListener('click', () => reset());
+  newTicketBtn.addEventListener("click", () => reset());
 
-  addLegBtn.addEventListener('click', () => {
+  addLegBtn.addEventListener("click", () => {
     state.items.push({
-      side: 'IN',
-      type: 'A',
+      side: "IN",
+      type: "A",
       strike: 100,
-      expiry: '2026-06-01',
-      quantity: 1
+      expiry: "2026-06-01",
+      quantity: 1,
     });
     renderLegs();
   });
 
-  priceBtn.addEventListener('click', () => void price());
+  computeBtn.addEventListener("click", () => void compute());
 
   reset();
 
@@ -227,8 +227,8 @@ function createApp(root: HTMLElement): void {
   root.append(container);
 }
 
-const mount = document.getElementById('app');
+const mount = document.getElementById("app");
 if (!mount) {
-  throw new Error('Missing app root');
+  throw new Error("Missing app root");
 }
 createApp(mount);

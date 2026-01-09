@@ -1,36 +1,36 @@
-import { describe, it, beforeEach, expect } from 'vitest';
-import { createAppFixture } from '../../helpers/app-fixture';
-import { itemA, itemB } from '../../shared/fixtures/items';
-import { Actor } from '../core';
-import { StartNewRequest, AddItem, RemoveItem, Compute } from '../tasks';
-import { ResultStatus, ResultValue } from '../questions';
-import { STATUS } from '../../../app/src/types';
+import { describe, it, beforeEach, expect } from "vitest";
+import { createAppFixture } from "../../helpers/app-fixture";
+import { itemA, itemB } from "../../shared/fixtures/items";
+import { Actor } from "../core";
+import { StartNewRequest, AddItem, RemoveItem, Compute } from "../tasks";
+import { ResultStatus, ResultValue } from "../questions";
+import { STATUS } from "../../../app/src/types";
 
 let captured: unknown[] = [];
 
 const fixture = createAppFixture({
-  expectedUrl: 'http://service.local/compute',
+  expectedUrl: "http://service.local/compute",
   onRequest: (payload: unknown) => {
     captured.push(payload);
   },
-  response: { status: 'COMPLETED', value: 888 }
+  response: { status: "COMPLETED", value: 888 },
 });
 
 let trader: Actor;
 
-describe('Remove item — payload reflects deletion', () => {
+describe("Remove item — payload reflects deletion", () => {
   beforeEach(() => {
     captured = [];
-    trader = new Actor('Trader', fixture.app);
+    trader = new Actor("Trader", fixture.app);
   });
 
-  it('posts one item after removing the first', async () => {
+  it("posts one item after removing the first", async () => {
     await trader.attemptsTo(
       new StartNewRequest(),
       new AddItem(itemA),
       new AddItem(itemB),
       new RemoveItem(0),
-      new Compute()
+      new Compute(),
     );
 
     expect(captured.length).toBe(1);
