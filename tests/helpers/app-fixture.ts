@@ -57,7 +57,9 @@ export function createAppFixture(interceptor?: ComputeInterceptor): AppFixture {
     if (adapter === "chromium") {
       server = await startViteAppServer();
       browser = await chromium.launch({
-        headless: true,
+        headless: !process.env.HEADED,
+        devtools: !!process.env.PWDEBUG,
+        slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) : undefined,
         args: ["--disable-gpu", "--disable-dev-shm-usage"],
       });
       page = await browser.newPage();
