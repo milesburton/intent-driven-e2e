@@ -1,8 +1,12 @@
 {
   "name": "Playwright Domain-Driven Testing Example",
-  "build": { "dockerfile": "Dockerfile" },
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "features": {
-    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
   },
   "customizations": {
     "vscode": {
@@ -16,8 +20,12 @@
       ],
       "settings": {
         "terminal.integrated.profiles.linux": {
-          "bash": { "path": "/bin/bash" },
-          "fish": { "path": "/usr/bin/fish" }
+          "bash": {
+            "path": "/bin/bash"
+          },
+          "fish": {
+            "path": "/usr/bin/fish"
+          }
         },
         "terminal.integrated.defaultProfile.linux": "bash",
         "files.watcherExclude": {
@@ -29,6 +37,12 @@
       }
     }
   },
-  "runArgs": ["--shm-size=1gb"],
-  "postCreateCommand": "corepack prepare pnpm@9.0.0 --activate && pnpm install"
+  "runArgs": [
+    "--shm-size=1gb"
+  ],
+  "postCreateCommand": "corepack prepare pnpm@9.0.0 --activate && pnpm install",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.config/claude,target=/home/node/.config/claude,type=bind"
+  ]
 }
